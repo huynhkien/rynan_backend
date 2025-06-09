@@ -9,7 +9,9 @@ const mongoSanitize = require('express-mongo-sanitize');
 const {notFound, errorHandler} = require('./src/middlewares/errHandle');
 const app = express();
 require('dotenv').config();
-
+const userRouter = require('./src/routes/users.route');
+const categoryRouter = require('./src/routes/categories.route');
+const productRouter = require('./src/routes/products.route');
 
 // Ngăn chặn injection NoSQL
 app.use((req, res, next) => {
@@ -74,7 +76,10 @@ app.get('/', (req, res) => {
         message: "Welcome"
     })
 })
-
+// api
+app.use('/api/user', userRouter);
+app.use('/api/product', productRouter);
+app.use('/api/category', categoryRouter);
 // Bắt các route không khớp, trả về lỗi 404
 app.use(notFound)
 // Xử lý lỗi
