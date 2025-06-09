@@ -30,6 +30,7 @@ const userSchema = new mongoose.Schema({
     },
     wishlist: [{type: mongoose.Types.ObjectId, ref: 'Product'}],
     isBlocked: {type: Boolean, default: false},
+    lastLoginAt: {type: Date},
     refreshToken: {type: String},
     passwordChangedAt: {type: String},
     passwordResetToken: {type: String},
@@ -48,7 +49,12 @@ userSchema.pre('save', async function(next) {
     this.password = await bcrypt.hash(this.password, salt);
     next();
 });
-
+// Xử lý khóa tài khoản
+userSchema.pre('save', async function(next) {
+    const ninetyDaysAgo = new Date(Date.now() - 90*24*60*60*1000);
+    if(this.lastLoginAt && this.lastLoginAt > ninetyDaysAgo) this.isBlocked = true;
+    next();
+})
 userSchema.methods = {
     isCorrectPassword: async function(password) {
         return await bcrypt.compare(password, this.password);
