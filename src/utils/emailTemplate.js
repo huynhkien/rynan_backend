@@ -1,4 +1,4 @@
-const templateMailAuth = ({title, name, type, url}) => {
+const templateMailAuth = ({title, name, type, url, password}) => {
     return email = `
             <!DOCTYPE html>
             <html lang="vi">
@@ -201,41 +201,55 @@ const templateMailAuth = ({title, name, type, url}) => {
                     
                     <!-- Content -->
                     <div class="content">
-                        <div class="welcome-text">
-                            Xin chào <strong>${name}</strong>,
-                        </div>
+                        ${name && `
+                            <div class="welcome-text">
+                                Xin chào <strong>${name}</strong>,
+                            </div>
+                        `}
                         
-                        <div class="description">
-                            ${type === 'register' ? 'Cảm ơn bạn đã đăng ký tài khoản với chúng tôi! Để hoàn tất quá trình đăng ký và bảo mật tài khoản của bạn, vui lòng xác thực địa chỉ email bằng cách sử dụng mã xác thực bên dưới' : 'Cảm ơn bạn đã đăng ký tài khoản với chúng tôi! Để hoàn tất quá trình lấy lại mật khẩu và bảo mật tài khoản của bạn, vui lòng xác thực địa chỉ email bằng cách sử dụng mã xác thực bên dưới'}
-                        </div>
+                        ${type ? `
+                            <div class="description">
+                                ${type === 'register' ? 'Cảm ơn bạn đã đăng ký tài khoản với chúng tôi! Để hoàn tất quá trình đăng ký và bảo mật tài khoản của bạn, vui lòng xác thực địa chỉ email bằng cách sử dụng mã xác thực bên dưới' : 'Cảm ơn bạn đã đăng ký tài khoản với chúng tôi! Để hoàn tất quá trình lấy lại mật khẩu và bảo mật tài khoản của bạn, vui lòng xác thực địa chỉ email bằng cách sử dụng mã xác thực bên dưới'}
+                            </div>
+                            `:
+                            `
+                            <div class="description">
+                                Mật khẩu của bạn đã được quản trị hệ thông thay đổi.
+                            </div>
+                            `
+                        }
                         
                         <!-- Verification Code -->
-                        <div class="verification-code">
-                            <div class="code-label">Mã Xác Thực</div>
-                            <div class="code">[MÃ XÁC THỰC]</div>
-                        </div>
+                        ${password && `
+                            <div class="verification-code">
+                                <div class="code-label">Mật khẩu tài khoản đã được thay đổi</div>
+                                <div class="code">${password}</div>
+                            </div>
+                        `}
                         
                         <!-- Verify Button -->
-                        <div class="button-container">
-                            <a href="${url}" class="verify-button">Xác Thực Ngay</a>
-                        </div>
-                        
-                        <!-- Warning -->
-                        <div class="warning">
-                            <span class="warning-icon">⚠️</span>
-                            <div class="warning-text">
-                                <strong>Lưu ý quan trọng:</strong><br>
-                                • Mã xác thực này chỉ có hiệu lực trong <strong>15 phút</strong><br>
-                                • Không chia sẻ mã này với bất kỳ ai<br>
-                                • Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email
+                        ${url && `
+                        <>
+                            <div class="button-container">
+                                <a href="${url}" class="verify-button">Xác Thực Ngay</a>
                             </div>
-                        </div>
-                        
-                        <div class="description">
-                            Nếu bạn gặp khó khăn khi nhấp vào nút xác thực, vui lòng sao chép và dán liên kết sau vào trình duyệt của bạn:<br>
-                            <strong>${url}</strong>
-                        </div>
-                        
+                            <!-- Warning -->
+                            <div class="warning">
+                                <span class="warning-icon">⚠️</span>
+                                <div class="warning-text">
+                                    <strong>Lưu ý quan trọng:</strong><br>
+                                    • Mã xác thực này chỉ có hiệu lực trong <strong>15 phút</strong><br>
+                                    • Không chia sẻ mã này với bất kỳ ai<br>
+                                    • Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email
+                                </div>
+                            </div>
+                            <div class="description">
+                                Nếu bạn gặp khó khăn khi nhấp vào nút xác thực, vui lòng sao chép và dán liên kết sau vào trình duyệt của bạn:<br>
+                                <strong>${url}</strong>
+                            </div>
+                        </>
+                        `
+                        }
                         <div class="description">
                             Nếu bạn có bất kỳ câu hỏi nào, đừng ngần ngại liên hệ với đội ngũ hỗ trợ của chúng tôi.
                         </div>
