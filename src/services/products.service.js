@@ -3,27 +3,31 @@ const asyncHandler = require('express-async-handler');
 
 // Thêm sản phẩm
 const addProduct = asyncHandler(async(data) => {
-    await Product.create(data);
+    return await Product.create(data);
 });
 // Cập nhật sản phẩm
 const updateProduct = asyncHandler(async(id, data) => {
-    await Product.findByIdAndUpdate(id, data, {new: true});
+    return await Product.findByIdAndUpdate(id, data, {new: true});
+});
+// Cập nhật lượt bán sản phẩm
+const updateSoldProduct = asyncHandler(async(id, sold) => {
+    return await Product.findByIdAndUpdate(id, {$inc: {sold: sold}}, {new: true})
 });
 // Tìm sản phẩm theo id
 const findProductById = asyncHandler(async(id) => {
-    await Product.findById(id);
+    return await Product.findById(id);
 });
 // Tìm tất cả sản phẩm
 const findAllProduct = asyncHandler(async() => {
-    await Product.find();
+    return await Product.find();
 })
 // Xóa sản phẩm
 const deleteProduct = asyncHandler(async(id) => {
-    await Product.findByIdAndDelete({_id: id})
+    return await Product.findByIdAndDelete({_id: id})
 })
 // Tìm sản phẩm theo slug
 const findProductBySlug = asyncHandler(async(slug) => {
-    await Product.findOne(slug)
+    return await Product.findOne(slug)
 })
 
 module.exports = {
@@ -32,5 +36,6 @@ module.exports = {
     findProductById, 
     findAllProduct,
     deleteProduct,
-    findProductBySlug
+    findProductBySlug,
+    updateSoldProduct,
 }
