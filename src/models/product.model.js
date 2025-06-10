@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 const slug = require('mongoose-slug-updater');
-const ProductSchema = mongoose.Schema({
+const ProductSchema = new mongoose.Schema({
     name: {type: String, required: true},
     sku: {type: String, required: true},
     thumb: {
         url: String,
         public_id: String
     },
-    sold: {type: Number},
+    sold: {type: Number, default: 0},
     category: {type: mongoose.Types.ObjectId, ref: 'Category'},
     price: {type: Number, required: true},
     specification: {type: String, required: true},
