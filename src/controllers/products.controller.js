@@ -2,7 +2,7 @@ const ProductService = require('../services/products.service');
 const asyncHandler = require('express-async-handler');
 // Thêm sản phẩm
 const addProduct = asyncHandler(async(req, res) => {
-    if(req.body) throw new Error('Thiếu thông tin sản phẩm');
+    if(!req.body) throw new Error('Thiếu thông tin sản phẩm');
     const thumb = req.file ? req.file.path : null;
     if(thumb) req.body.thumb = {
         url: req.file.path,

@@ -44,8 +44,24 @@ const findOrderById = asyncHandler(async(req, res) => {
         success: true,
         data: response
     });
-})
+});
+// Tìm tất cả các đơn hàng
+const findAllOrder = asyncHandler(async(req, res) => {
+    const response = await OrderService.findAllOrder();
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            data: 'Không tìm thấy thông tin đơn hàng'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        data: response
+    });
+});
 module.exports = {
     addOrder,
-    updateOrder
+    updateOrder,
+    findOrderById,
+    findAllOrder
 }
