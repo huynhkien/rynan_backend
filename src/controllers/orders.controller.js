@@ -59,9 +59,25 @@ const findAllOrder = asyncHandler(async(req, res) => {
         data: response
     });
 });
+// Xóa thông tin đơn hàng
+const deleteOrder = asyncHandler(async(req, res) => {
+    const {oid} = req.params;
+    const response = await OrderService.deleteOrder(oid);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Xóa đơn hàng thất bại'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Xóa thông tin đơn hàng thành công'
+    })
+})
 module.exports = {
     addOrder,
     updateOrder,
     findOrderById,
-    findAllOrder
+    findAllOrder,
+    deleteOrder
 }
