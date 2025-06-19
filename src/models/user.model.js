@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema({
     address: {
         street: {type: String, maxLength: 255},
         city: {type: String, maxLength: 100},
-        state: {type: String, maxLength: 100},
+        ward: {type: String, maxLength: 100},
+        district: {type: String, maxLength: 100},
         country: {type: String, maxLength: 100, default: 'Vietnam'},
         zipCode: {type: String, maxLength: 20}
     },
