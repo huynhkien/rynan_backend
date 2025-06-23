@@ -63,7 +63,13 @@ app.use(bodyParser.json({ limit: '50mb' }));
 // Phân tích url-encoded body
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 // cors => truyền dữ liệu
-app.use(cors());
+const corsOptions = {
+   origin: 'http://localhost:3000',
+   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+   credentials: true,
+   optionsSuccessStatus: 204,
+};
+app.use(cors(corsOptions));
 // Xử lý params
 app.use(hpp({
     whitelist: ['sort', 'fields'] 
