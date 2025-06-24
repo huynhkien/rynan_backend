@@ -3,6 +3,10 @@ const asyncHandler = require('express-async-handler');
 // Thêm sản phẩm
 const addProduct = asyncHandler(async(req, res) => {
     if(!req.body) throw new Error('Thiếu thông tin sản phẩm');
+    if(req.body.tags){
+        const tags = JSON.parse(req.body.tags);
+        req.body.tags = tags;
+    }
     const thumb = req.file ? req.file.path : null;
     if(thumb) req.body.thumb = {
         url: req.file.path,
@@ -16,13 +20,18 @@ const addProduct = asyncHandler(async(req, res) => {
         })
     }
     return res.status(200).json({
-            success: false,
-            message: 'Thêm sản phẩm thành công'
+            success: true,
+            message: 'Thêm sản phẩm thành công',
+            data: response
     });
 });
 // Cập nhật sản phẩm
 const updateProduct = asyncHandler(async(req, res) => {
     const {pid} = req.params;
+    if(req.body.tags){
+        const tags = JSON.parse(req.body.tags);
+        req.body.tags = tags;
+    }
     const thumb = req.file ? req.file.path : null;
     if(thumb) req.body.thumb = {
         url: req.file.path,
@@ -38,6 +47,23 @@ const updateProduct = asyncHandler(async(req, res) => {
     return res.status(200).json({
             success: false,
             message: 'Cập nhật sản phẩm thành công'
+    });
+});
+// Cập nhật bài viết sản phẩm
+const updateDescriptionProduct = asyncHandler(async(req, res) => {
+    const {pid} = req.params;
+    console.log(pid)
+    console.log(req.body.description);
+    const response = await ProductService.updateDescriptionProduct(pid, req.body.description);
+    if(!response) {
+        return res.status(400).json({
+            success: false,
+            message: 'Thêm bài viết sản phẩm thất bại'
+        })
+    }
+    return res.status(200).json({
+            success: true,
+            message: 'Thêm bài viết sản phẩm thành công'
     });
 });
 // Tìm kiếm sản phẩm theo id
@@ -105,5 +131,6 @@ module.exports = {
     findProductById,
     findAllProduct,
     findProductBySlug,
-    deleteProduct
+    deleteProduct,
+    updateDescriptionProduct
 }
