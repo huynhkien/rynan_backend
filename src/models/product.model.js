@@ -1,17 +1,27 @@
 const mongoose = require('mongoose');
 const slug = require('mongoose-slug-updater');
 const ProductSchema = new mongoose.Schema({
-    name: {type: String, required: true},
-    sku: {type: String, required: true},
+    code: {type: String},
+    name_vn: {type: String, required: true},
+    name_eng: {type: String},
+    name_short: {type: String},
     thumb: {
         url: String,
         public_id: String
     },
     sold: {type: Number, default: 0},
-    category: {type: mongoose.Types.ObjectId, ref: 'Category'},
-    price: {type: Number, required: true},
-    specification: {type: String, required: true},
-    slug: {type: String, slug: 'name', required: true},
+    category: {type: String},
+    tags: {type: String},
+    prices: [
+        {
+            title: {type: String},
+            price: {type: Number}
+        }
+    ],
+    price_reference: {type: Number, required: true},
+    specification: {type: String},
+    origin: {type: String},
+    slug: {type: String, slug: 'name_vn'},
     ratings: [
         {
             star: {type: Number},
@@ -28,8 +38,12 @@ const ProductSchema = new mongoose.Schema({
             }]
         }
     ],
+    isActive: {
+        type: String,
+        default: "Đang bán"
+    },
     totalRatings: {type: Number, default: 0},
-    description: {type: String, required: true},
+    description: {type: String},
     joinTime: {type: Date}
 },{
     timestamps: true
