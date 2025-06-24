@@ -11,9 +11,9 @@ router.route('/')
 
 router.route('/:pid')
             .get(productsController.findProductById)
-            .put([verifyAccessToken, checkUserPermission], productsController.updateProduct)
+            .put(uploader.single('thumb'), productsController.updateProduct)
             .delete(productsController.deleteProduct);
-
+router.route('/update-description/:pid').put(productsController.updateDescriptionProduct);
 router.route('/:slug').get(productsController.findProductBySlug);
 
 module.exports = router;
