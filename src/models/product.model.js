@@ -11,11 +11,11 @@ const ProductSchema = new mongoose.Schema({
     },
     sold: {type: Number, default: 0},
     category: {type: String},
-    tags: {type: String},
+    tags: [{ tag: String }],
     prices: [
         {
-            title: {type: String},
-            price: {type: Number}
+            title: String,
+            price: Number
         }
     ],
     price_reference: {type: Number, required: true},
@@ -43,7 +43,7 @@ const ProductSchema = new mongoose.Schema({
         default: "Đang bán"
     },
     totalRatings: {type: Number, default: 0},
-    description: {type: String},
+    description: {type: String, default: ''},
     joinTime: {type: Date}
 },{
     timestamps: true
