@@ -5,8 +5,8 @@ const addProduct = asyncHandler(async(req, res) => {
     if(!req.body) throw new Error('Thiếu thông tin sản phẩm');
     const thumb = req.file ? req.file.path : null;
     if(thumb) req.body.thumb = {
-        url: req.file.name,
-        public_id: req.file.name
+        url: req.file.path,
+        public_id: req.file.filename
     }
     const response = await ProductService.addProduct(req.body);
     if(!response) {
@@ -65,7 +65,7 @@ const findAllProduct = asyncHandler(async(req, res) => {
         })
     }
     return res.status(200).json({
-            success: false,
+            success: true,
             data: response
     });
 });
