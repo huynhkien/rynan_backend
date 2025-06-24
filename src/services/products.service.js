@@ -9,6 +9,10 @@ const addProduct = asyncHandler(async(data) => {
 const updateProduct = asyncHandler(async(id, data) => {
     return await Product.findByIdAndUpdate(id, data, {new: true});
 });
+// Cập nhật bài viết sản phẩm
+const updateDescriptionProduct = asyncHandler(async(id, description) => {
+    return await Product.findByIdAndUpdate(id, {description}, {new: true});
+});
 // Cập nhật lượt bán sản phẩm
 const updateSoldProduct = asyncHandler(async(id, sold) => {
     return await Product.findByIdAndUpdate(id, {$inc: {sold: sold}}, {new: true})
@@ -38,4 +42,5 @@ module.exports = {
     deleteProduct,
     findProductBySlug,
     updateSoldProduct,
+    updateDescriptionProduct
 }
