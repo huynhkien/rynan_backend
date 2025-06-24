@@ -5,7 +5,7 @@ const addProduct = asyncHandler(async(req, res) => {
     if(!req.body) throw new Error('Thiếu thông tin sản phẩm');
     const thumb = req.file ? req.file.path : null;
     if(thumb) req.body.thumb = {
-        url: req.file.path,
+        url: req.file.name,
         public_id: req.file.name
     }
     const response = await ProductService.addProduct(req.body);

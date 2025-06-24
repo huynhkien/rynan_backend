@@ -7,7 +7,13 @@ const CategorySchema = new mongoose.Schema({
         public_id: String
     },
     description: {type: String},
-    slug: {type: String, slug: 'name'}
+    slug: {type: String, slug: 'name', unique: true, slugPaddingSize: 4 },
+    parent: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        default: null 
+    },
+    level: {type: Number, default: 0}
 },{
     timestamps: true
 })

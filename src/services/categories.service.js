@@ -17,9 +17,10 @@ const findAllCategory = asyncHandler(async() => {
     return await Category.find();
 })
 // Xóa danh mục
-const deleteCategory = asyncHandler(async(id) => {
-    return await Category.findByIdAndDelete({_id: id})
-})
+const deleteCategory = asyncHandler(async (id) => {
+    console.log(id)
+    return await Category.findByIdAndDelete(id);
+});
 // Tìm danh mục theo slug
 const findCategoryBySlug = asyncHandler(async(slug) => {
     return await Category.findOne(slug)

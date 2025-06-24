@@ -2,15 +2,17 @@ const categoriesController = require('../controllers/categories.controller');
 const express = require('express');
 const {verifyAccessToken, checkUserPermission} = require('../middlewares/auth');
 const router = express.Router();
+const uploader = require('../config/connectCloudinary');
+
 
 router.route('/')
-            .post([verifyAccessToken, checkUserPermission],categoriesController.addCategory)
+            .post(uploader.single('thumb'), categoriesController.addCategory)
             .get(categoriesController.findAllCategory);
-router.route('/cid')
+router.route('/:cid')
             .get(categoriesController.findCategoryById)
-            .put([verifyAccessToken, checkUserPermission], categoriesController.updateCategory)
-            .delete([verifyAccessToken, checkUserPermission], categoriesController.deleteCategory);
+            .put(uploader.single('thumb'), categoriesController.updateCategory)
+            .delete(categoriesController.deleteCategory);
 
-router.route('/:slug').get(categoriesController.findCategoryBySlug);
+router.route('/slug/:slug').get(categoriesController.findCategoryBySlug);
 
 module.exports = router;
