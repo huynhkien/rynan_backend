@@ -13,6 +13,7 @@ const userRouter = require('./src/routes/users.route');
 const categoryRouter = require('./src/routes/categories.route');
 const productRouter = require('./src/routes/products.route');
 const orderRouter = require('./src/routes/orders.route');
+const specificationRouter = require('./src/routes/specifications.route');
 
 // Ngăn chặn injection NoSQL
 app.use((req, res, next) => {
@@ -88,6 +89,7 @@ app.use('/api/user', userRouter);
 app.use('/api/product', productRouter);
 app.use('/api/category', categoryRouter);
 app.use('/api/order', orderRouter);
+app.use('/api/specification', specificationRouter);
 // Bắt các route không khớp, trả về lỗi 404
 app.use(notFound)
 // Xử lý lỗi
