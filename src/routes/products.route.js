@@ -14,6 +14,9 @@ router.route('/:pid')
             .put(uploader.single('thumb'), productsController.updateProduct)
             .delete(productsController.deleteProduct);
 router.route('/update-description/:pid').put(productsController.updateDescriptionProduct);
+router.route('/add-price/:pid').put(productsController.addPriceProduct);
+router.route('/update-price/:pid/:rid').put(productsController.updatePriceProduct);
+router.route('/delete-price/:pid/:rid').delete(productsController.deletePriceProduct);
 router.route('/:slug').get(productsController.findProductBySlug);
 
 module.exports = router;
