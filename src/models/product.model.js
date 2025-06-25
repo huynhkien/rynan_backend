@@ -14,8 +14,11 @@ const ProductSchema = new mongoose.Schema({
     tags: [{ tag: String }],
     prices: [
         {
-            title: String,
-            price: Number
+            priceType: String,                  
+            price: Number,                    
+            startDate: Date,                
+            endDate: Date,                  
+            note: String,       
         }
     ],
     price_reference: {type: Number, required: true},
