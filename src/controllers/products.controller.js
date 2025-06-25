@@ -66,6 +66,68 @@ const updateDescriptionProduct = asyncHandler(async(req, res) => {
             message: 'Thêm bài viết sản phẩm thành công'
     });
 });
+// Thêm giá tiền cho sản phẩm
+const addPriceProduct = asyncHandler(async(req, res) => {
+    const {pid} = req.params;
+    console.log(pid)
+    const product = await ProductService.findProductById(pid);
+    if(!req.body.prices) return res.status(400).json({
+            success: false,
+            message: 'Thiếu thông tin priceType'
+        });
+    if(!product) throw new Error('Sản phẩm không tồn tại');
+    const existingPrice = product.prices.find((existingPrice) => 
+        existingPrice.priceType === req.body.prices.priceType
+    );
+    if (existingPrice) {
+        return res.status(400).json({
+            success: false,
+            message: 'Tồn tại loại giá'
+        });
+    }
+
+    const response = await ProductService.AddPriceProduct(pid, req.body.prices);
+    if(!response) {
+        return res.status(400).json({
+            success: false,
+            message: 'Thêm giá sản phẩm thất bại'
+        })
+    }
+    return res.status(200).json({
+            success: true,
+            message: 'Thêm giá sản phẩm thành công'
+    });
+});
+// Cập nhật thông tin giá tiền cho sản phẩm
+const updatePriceProduct = asyncHandler(async(req, res) => {
+    const {pid, rid} = req.params;
+    const response = await ProductService.updatePriceProduct(pid, rid, req.body.prices);
+    if(!response) {
+        return res.status(400).json({
+            success: false,
+            message: 'Cập nhật giá sản phẩm thất bại'
+        })
+    }
+    return res.status(200).json({
+            success: true,
+            message: 'Cập nhật giá sản phẩm thành công'
+    });
+})
+// Xóa thông tin giá tiền cho sản phẩm
+const deletePriceProduct = asyncHandler(async(req, res) => {
+    const {pid, rid} = req.params;
+    const response = await ProductService.deletePriceProduct(pid, rid);
+    if(!response) {
+        return res.status(400).json({
+            success: false,
+            message: 'Xóa giá sản phẩm thất bại'
+        })
+    }
+    return res.status(200).json({
+            success: true,
+            message: 'Xóa giá sản phẩm thành công'
+    });
+})
 // Tìm kiếm sản phẩm theo id
 const findProductById = asyncHandler(async(req, res) => {
     const {pid} = req.params;
@@ -132,5 +194,8 @@ module.exports = {
     findAllProduct,
     findProductBySlug,
     deleteProduct,
-    updateDescriptionProduct
+    updateDescriptionProduct,
+    addPriceProduct,
+    updatePriceProduct,
+    deletePriceProduct
 }
