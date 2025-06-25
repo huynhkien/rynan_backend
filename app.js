@@ -55,6 +55,11 @@ const limiter = rateLimit({
     },
     standardHeaders: true,
     legacyHeaders: false,
+    trustProxy: true,
+    keyGenerator: (req) => {
+      // Sử dụng IP từ X-Forwarded-For header
+      return req.ip || req.connection.remoteAddress;
+    }
 });
 app.use(limiter);
 
@@ -64,7 +69,6 @@ app.use(bodyParser.json({ limit: '50mb' }));
 // Phân tích url-encoded body
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 // cors => truyền dữ liệu
-app.set('trust proxy', true);
 const corsOptions = {
    origin: [
     'https://rynan-frontend-n2dm.vercel.app',
