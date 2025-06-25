@@ -45,7 +45,7 @@ const updateProduct = asyncHandler(async(req, res) => {
         })
     }
     return res.status(200).json({
-            success: false,
+            success: true,
             message: 'Cập nhật sản phẩm thành công'
     });
 });
@@ -77,7 +77,7 @@ const findProductById = asyncHandler(async(req, res) => {
         })
     }
     return res.status(200).json({
-            success: false,
+            success: true,
             data: response
     });
 });
