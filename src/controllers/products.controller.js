@@ -101,7 +101,11 @@ const addPriceProduct = asyncHandler(async(req, res) => {
 // Cập nhật thông tin giá tiền cho sản phẩm
 const updatePriceProduct = asyncHandler(async(req, res) => {
     const {pid, rid} = req.params;
-    const response = await ProductService.updatePriceProduct(pid, rid, req.body.prices);
+    const response = await ProductService.updatePriceProduct({
+        pid,
+        rid,
+        updatePrice: req.body.prices
+    });
     if(!response) {
         return res.status(400).json({
             success: false,
