@@ -13,6 +13,31 @@ const updateProduct = asyncHandler(async(id, data) => {
 const updateDescriptionProduct = asyncHandler(async(id, description) => {
     return await Product.findByIdAndUpdate(id, {description}, {new: true});
 });
+// Thêm giá tiền cho sản phẩm
+const AddPriceProduct = asyncHandler(async(id, newPrice) => {
+    return await Product.findByIdAndUpdate(id,{ $push: { prices: newPrice } }, {new: true});
+});
+// Cập nhật giá tiền sản phẩm
+const updatePriceProduct = asyncHandler(async({productID, priceId, updatePrice}) => {
+    const product = findProductById(productID);
+    if(!product) throw new Error('Không tìm thấy sản phẩm');
+    const productPriceIndex = product.prices.findIndex(item => item._id.toString() === priceId);
+    if(productPriceIndex !== -1) throw new Error('Không tìm thấy giá tiền của sản phẩm');
+    const updateData = {
+        ...product.prices[productPriceIndex].toObject(),
+        ...updatePrice
+    }
+    product.prices[productPriceIndex] = updateData;
+    return product.save();
+});
+// Xóa thông tin giá tiền trong sản phẩm
+const deletePriceProduct = asyncHandler(async(pid, rid) => {
+    return await Product.findByIdAndUpdate(
+        pid,
+        {$pull: {prices: {_id: rid}}},
+        {new: true}
+    )
+})
 // Cập nhật lượt bán sản phẩm
 const updateSoldProduct = asyncHandler(async(id, sold) => {
     return await Product.findByIdAndUpdate(id, {$inc: {sold: sold}}, {new: true})
@@ -42,5 +67,8 @@ module.exports = {
     deleteProduct,
     findProductBySlug,
     updateSoldProduct,
-    updateDescriptionProduct
+    updateDescriptionProduct,
+    AddPriceProduct,
+    updatePriceProduct,
+    deletePriceProduct
 }
