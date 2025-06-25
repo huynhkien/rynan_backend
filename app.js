@@ -67,8 +67,9 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 const corsOptions = {
    origin: [
     'https://rynan-frontend-n2dm.vercel.app',
-    'https://rynan-frontend-n2dm-ejal6lpti-kiens-projects-37788a2e.vercel.app/',
-    'https://rynan-frontend-n2dm-git-main-kiens-projects-37788a2e.vercel.app/'
+    'https://rynan-frontend-n2dm-ejal6lpti-kiens-projects-37788a2e.vercel.app',
+    'https://rynan-frontend-n2dm-git-main-kiens-projects-37788a2e.vercel.app',
+    'http://localhost:3000'
   ],
    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
    credentials: true,
