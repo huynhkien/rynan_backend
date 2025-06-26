@@ -4,7 +4,7 @@ const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 // Đăng ký tài khoản
 const register = asyncHandler(async(req, res) => {
-    const newUser = await UserService.register(req.body);
+    const newUser = await UserService.register(req.body, res);
     if(!newUser){
         return res.status(400).json({
             success: false,
@@ -73,19 +73,13 @@ const findAllUser = asyncHandler(async(req, res) => {
     });
 })
 const login = asyncHandler(async(req, res) => {
-    const {email, password} = req.params;
-    const user = await UserService.login(email, password);
-    // tạo accessToken và refreshToken
-    const accessToken = generateAccessToken(user?._id, userData?.role);
-    const refreshToken = generateRefreshToken(user?._id);
-    UserService.updateRefreshToken(user?._id, refreshToken);
-    if(user){
-        res.cookie('refreshToken', refreshToken, {httpOnly: true, maxAge: 7 * 24 * 60 *60 * 1000});
+    const response = await UserService.login({email: req.body.email, password: req.body.password, res: res});
+    if(response){
         return res.status(200).json({
             success: true,
             message: 'Đăng nhập thành công',
-            accessToken: accessToken,
-            data: user
+            accessToken: response?.accessToken,
+            data: response.user
         })
     }
     return res.status(400).json({
