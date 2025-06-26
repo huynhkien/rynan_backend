@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
         default: 2000
     },
     wishlist: [{type: mongoose.Types.ObjectId, ref: 'Product'}],
-    isBlocked: {type: Boolean, default: false},
+    // isBlocked: {type: Boolean, default: false},
     lastLoginAt: {type: Date},
     refreshToken: {type: String},
     passwordChangedAt: {type: String},
@@ -56,15 +56,14 @@ userSchema.pre('save', async function(next) {
     if(this.lastLoginAt && this.lastLoginAt > ninetyDaysAgo) this.isBlocked = true;
     next();
 })
-userSchema.methods = {
-    isCorrectPassword: async function(password) {
-        return await bcrypt.compare(password, this.password);
-    },
-    createPasswordChangeToken: function () {
-        const resetToken = crypto.randomBytes(32).toString('hex');
-        this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
-        this.passwordResetExpires = Date.now() + 15*60*1000;
-        return resetToken
-    } 
-}
+userSchema.methods.isCorrectPassword = async function(password) {
+  return await bcrypt.compare(password, this.password);
+};
+
+userSchema.methods.createPasswordChangeToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  this.passwordResetExpires = Date.now() + 15 * 60 * 1000;
+  return resetToken;
+};
 module.exports = mongoose.model('User', userSchema);
