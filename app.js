@@ -52,14 +52,26 @@ const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, 
     max: 100, 
     message: {
-        error: 'Quá nhiều requests từ IP này, vui lòng thử lại sau.'
+        error: 'Quá nhiều requests từ IP này, vui lòng thử lại sau.',
+        retryAfter: Math.ceil(15 * 60) // seconds
     },
     standardHeaders: true,
     legacyHeaders: false,
-    trustProxy: true,
     keyGenerator: (req) => {
-      // Sử dụng IP từ X-Forwarded-For header
-      return req.ip || req.connection.remoteAddress;
+        // Lấy IP từ các sources khác nhau
+        const forwarded = req.headers['x-forwarded-for'];
+        const ip = forwarded ? forwarded.split(',')[0].trim() : 
+                   req.headers['x-real-ip'] || 
+                   req.connection.remoteAddress || 
+                   req.socket.remoteAddress ||
+                   (req.connection.socket ? req.connection.socket.remoteAddress : null);
+        
+        console.log('Rate limit key:', ip); // Debug log
+        return ip;
+    },
+    // Thêm handler khi hit limit
+    onLimitReached: (req, res) => {
+        console.log(`Rate limit exceeded for IP: ${req.ip}`);
     }
 });
 app.use(limiter);
