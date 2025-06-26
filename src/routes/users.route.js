@@ -4,8 +4,8 @@ const {verifyAccessToken, checkUserPermission} = require('../middlewares/auth');
 const router = express.Router();
 
 router.route('/').get(usersController.findAllUser);
-router.route('/register').get(usersController.register);
-router.route('/final-register').post(usersController.finalRegister);
+router.route('/register').post(usersController.register);
+router.route('/final-register/:token').get(usersController.finalRegister);
 
 router.route('/:uid')
             .get(usersController.findUserById)
@@ -13,7 +13,7 @@ router.route('/:uid')
 
 router.route('/find-user').get(usersController.findUserByToken);
 
-router.route('/login').get(usersController.login);
+router.route('/login').post(usersController.login);
 router.route('/logout').get(usersController.logout);
 
 router.route('/forgot-password').get(usersController.forgotPassword);
