@@ -103,7 +103,7 @@ const deleteProduct = asyncHandler(async(id) => {
 })
 // Tìm sản phẩm theo slug
 const findProductBySlug = asyncHandler(async(slug) => {
-    return await Product.findOne(slug)
+    return await Product.findOne({slug})
 })
 
 module.exports = {
