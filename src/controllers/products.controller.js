@@ -149,7 +149,10 @@ const findProductById = asyncHandler(async(req, res) => {
 });
 // Tìm kiếm tất cả các sản phẩm
 const findAllProduct = asyncHandler(async(req, res) => {
-    const response = await ProductService.findAllProduct();
+    const response = await ProductService.findAllProduct({
+        queries: req.query,
+        req: req
+    });
     if(!response) {
         return res.status(400).json({
             success: false,
@@ -158,7 +161,8 @@ const findAllProduct = asyncHandler(async(req, res) => {
     }
     return res.status(200).json({
             success: true,
-            data: response
+            data: response.queryExecute,
+            count: response.counts
     });
 });
 // Tìm kiếm sản phẩm theo slug
