@@ -2,17 +2,25 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const userSchema = new mongoose.Schema({
-    name: {type: String, maxLength: 255, required: true},
-    password: {type: String, maxLength: 255, required: true},
-    email: {type: String, maxLength: 255, required: true},
-    phone: {type: String, maxLength: 255, required: true},
+    name: {type: String, maxLength: 255},
+    password: {type: String, maxLength: 255},
+    email: {type: String, maxLength: 255},
+    phone: {type: String, maxLength: 255},
     address: {
-        street: {type: String, maxLength: 255},
-        city: {type: String, maxLength: 100},
-        ward: {type: String, maxLength: 100},
-        district: {type: String, maxLength: 100},
-        country: {type: String, maxLength: 100, default: 'Vietnam'},
-        zipCode: {type: String, maxLength: 20}
+        province: {
+            code: Number,
+            name: String
+        },
+        district: {
+            code: Number,
+            name: String
+        },
+        ward: {
+            code: Number,
+            name: String
+        },
+        detail: {type: String},
+        addressAdd: {type: String}
     },
     dateOfBirth: {type: Date,},
     gender: {
@@ -31,12 +39,20 @@ const userSchema = new mongoose.Schema({
     },
     wishlist: [{type: mongoose.Types.ObjectId, ref: 'Product'}],
     // isBlocked: {type: Boolean, default: false},
-    lastLoginAt: {type: Date},
+    lastLoginAt: {type: Date, default: Date.now()},
     refreshToken: {type: String},
     passwordChangedAt: {type: String},
     passwordResetToken: {type: String},
     passwordResetExpires: {type: String},
     registerToken: {type: String},
+    type: {type: String, default: 'Đăng ký mới'},
+    source: {type: String},
+    identification_card: {type: String},
+    tax_code: {type: String},
+    website: {type: String},
+    invoice_address: {type: String},
+    staff: {type: mongoose.Types.ObjectId, ref: 'User', default: null},
+    code: {type: String}
 },{
     timestamps: true
 })
