@@ -56,7 +56,8 @@ const corsOptions = {
     'https://rynan-frontend-n2dm.vercel.app',
     'https://rynan-frontend-n2dm-ejal6lpti-kiens-projects-37788a2e.vercel.app',
     'https://rynan-frontend-n2dm-git-main-kiens-projects-37788a2e.vercel.app',
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'https://rynan-frontend-cv3l.vercel.app'
   ],
    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
    credentials: true,
