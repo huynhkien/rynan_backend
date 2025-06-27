@@ -44,6 +44,28 @@ const findUserById = asyncHandler(async(req, res) => {
         data: user
     })
 })
+// Thêm thông tin người dùng
+const addUserByAdmin = asyncHandler(async(req, res) => {
+    console.log(req.body)
+    if(req.file) req.body.avatar = {
+        url: req.file.path,
+        public_id: req.file.filename
+    }
+    if(req.body.address){
+        req.body.address = JSON.parse(req.body.address);
+    }
+    const response = await UserService.addUserByAdmin(req.body);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Thêm thông tin thất bại'
+        })
+    }
+    res.status(200).json({
+        success: true,
+        message: 'Thêm thông tin thành công'
+    })
+})
 // Tìm theo thông tin lưu trong token
 const findUserByToken = asyncHandler(async(req, res) => {
     const {_id} = req.user;
@@ -69,7 +91,7 @@ const findAllUser = asyncHandler(async(req, res) => {
     }
     res.status(200).json({
         success: true,
-        data: user
+        data: allUser
     });
 })
 const login = asyncHandler(async(req, res) => {
@@ -157,12 +179,9 @@ const updateInfoByUser = asyncHandler(async(req, res) => {
 })
 const updateInfoByAdmin = asyncHandler(async(req, res) => {
     const {uid} = req.params;
-    if(req.body.password){
+    if(req.body?.password){
         const salt = bcrypt.genSaltSync(15);
         req.body.password = await bcrypt.hash(req.body.password, salt);
-
-    }else{
-        delete req.body.password;
     }
     const response = await UserService.updateInfoByAdmin(uid, req.body);
     if(!response){
@@ -191,6 +210,21 @@ const updateAddress = asyncHandler(async(req, res) => {
         message: 'Cập nhật thông tin thành công'
     })
 });
+// Xóa thông tin người dùng
+const deleteUser = asyncHandler(async(req, res) => {
+    const {uid} = req.params;
+    const response = await UserService.deleteUser(uid);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Xóa thông tin thất bại'
+        })
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Xóa thông tin thành công'
+    })
+})
 module.exports = {
     register,
     finalRegister,
@@ -203,5 +237,7 @@ module.exports = {
     resetPassword,
     updateInfoByUser,
     updateInfoByAdmin,
-    updateAddress
+    updateAddress,
+    addUserByAdmin,
+    deleteUser
 }
