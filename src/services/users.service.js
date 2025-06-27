@@ -86,19 +86,29 @@ const resetPassword = asyncHandler(async(password, token) => {
     
 
 })
+// Thêm thông tin 
+const addUserByAdmin = asyncHandler(async(data) => {
+    return await User.create(data);
+})
 // Cập nhật thông tin người dùng 
 const updateInfoByUser = asyncHandler(async(id, data) => {
     return await User.findByIdAndUpdate(id, data, {new: true}).select('-password -role');
 })
 const updateInfoByAdmin = asyncHandler(async(id, data) => {
     const result = await User.findByIdAndUpdate(id, data, {new: true});
-    const html = templateMailAuth({title: 'Thay đổi mật khẩu', name: data?.name, password: data?.password});
-    await sendMail({email, html, subject: 'Thay đổi mật khẩu'});
+    if(data?.password){
+        const html = templateMailAuth({title: 'Thay đổi mật khẩu', name: data?.name, password: data?.password});
+        await sendMail({email, html, subject: 'Thay đổi mật khẩu'});
+    }
     return result;
 });
 // Cập nhật địa chỉ người dùng
 const updateAddress = asyncHandler(async(id, data) => {
     return await User.findByIdAndUpdate(id, {address: data}, {new: true});
+})
+// Xóa thông tin
+const deleteUser = asyncHandler(async(id) => {
+    return await User.findByIdAndDelete(id);
 })
 module.exports = {
     register,
@@ -113,4 +123,6 @@ module.exports = {
     updateInfoByUser,
     updateInfoByAdmin,
     updateAddress,
+    addUserByAdmin,
+    deleteUser
 }
