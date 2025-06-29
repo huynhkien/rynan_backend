@@ -137,6 +137,19 @@ const resetPassword = asyncHandler(async(req, res) => {
         message: 'Cập nhật mật khẩu thành công'
     })
 })
+const findAllUser = asyncHandler(async(req, res) => {
+    const response = await UserService.findAllUser();
+    if(!response){
+        res.status(400).json({
+            success: false,
+            data: 'Không tìm thấy thông tin nguời dùng'
+        });
+    }
+    res.status(200).json({
+        success: true,
+        data: response
+    });
+})
 // Cập nhật thông tin người dùng
 const updateInfoByUser = asyncHandler(async(req, res) => {
     const {_id} = req.user;
