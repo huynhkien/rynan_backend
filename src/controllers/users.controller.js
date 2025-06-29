@@ -81,19 +81,6 @@ const findUserByToken = asyncHandler(async(req, res) => {
         data: user
     })
 })
-const findAllUser = asyncHandler(async(req, res) => {
-    const allUser = await UserService.findAllUser();
-    if(!allUser){
-        res.status(400).json({
-            success: true,
-            data: user
-        });
-    }
-    res.status(200).json({
-        success: true,
-        data: allUser
-    });
-})
 const login = asyncHandler(async(req, res) => {
     const response = await UserService.login({email: req.body.email, password: req.body.password, res: res});
     if(response){
