@@ -9,8 +9,8 @@ router.route('/')
             .get(quotesController.findAllQuote);
 router.route('/:qid')
             .get(quotesController.findQuoteById)
-            .put([verifyAccessToken, checkUserPermission], quotesController.updateQuote)
-            .delete([verifyAccessToken, checkUserPermission], quotesController.deleteQuote);
+            .put(quotesController.updateQuote)
+            .delete(quotesController.deleteQuote);
 
 
 module.exports = router;

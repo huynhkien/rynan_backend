@@ -16,7 +16,7 @@ router.route('/:pid')
 router.route('/update-description/:pid').put(productsController.updateDescriptionProduct);
 router.route('/add-price/:pid').put(productsController.addPriceProduct);
 router.route('/update-price/:pid/:rid').put(productsController.updatePriceProduct);
-router.route('/add-update-price/:pid').delete(productsController.addAndUpdatePriceProduct);
+router.route('/add-update-price/:pid').put(productsController.addAndUpdatePriceProduct);
 router.route('/detail/:slug').get(productsController.findProductBySlug);
 
 module.exports = router;
