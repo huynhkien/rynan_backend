@@ -70,16 +70,17 @@ const AddPriceProduct = asyncHandler(async(id, newPrice) => {
     return await Product.findByIdAndUpdate(id,{ $push: { prices: newPrice } }, {new: true});
 });
 // Cập nhật giá tiền sản phẩm
-const updatePriceProduct = asyncHandler(async({pid, rid, updatePrice}) => {
+const updatePriceProduct = asyncHandler(async({pid, rid, data}) => {
     const product = await findProductById(pid);
     console.log(rid);
+    console.log(data)
     if(!product) throw new Error('Không tìm thấy sản phẩm');
     const productPriceIndex = product.prices.findIndex(item => item._id.toString() === rid);
     console.log(productPriceIndex)
     if(productPriceIndex === -1) throw new Error('Không tìm thấy giá tiền của sản phẩm');
     const updateData = {
         ...product.prices[productPriceIndex].toObject(),
-        ...updatePrice
+        ...data.updatePrice
     }
     product.prices[productPriceIndex] = updateData;
     return product.save();
@@ -106,102 +107,25 @@ const findProductBySlug = asyncHandler(async(slug) => {
     return await Product.findOne({slug})
 });
 // Thêm và cập nhật giá tiền
-const addAndUpdatePriceProduct = asyncHandler(async ({ pid, updatePrice }) => {
-    const product = await findProductById(pid);
+const addAndUpdatePriceProduct = asyncHandler(async (pid, data) => {
+    const product = await Product.findById(pid);
     if (!product) throw new Error('Không tìm thấy sản phẩm');
-    // Danh sách các loại giá hợp lệ
-    const validPriceTypes = [
-        'dealerPrice', 'storePrice', 'retailPrice', 'promotionPrice', 
-        'internalPrice', 'listedPrice', 'offeringPrice', 'referencePrice'
-    ];
-    
-    const results = {
-        updated: [],
-        created: [],
-        errors: []
-    };
-    // Xử lý từng loại giá trong updatePrice
-    for (const [priceType, priceData] of Object.entries(updatePrice)) {
-        // Chỉ xử lý những key là loại giá hợp lệ
-        if (!validPriceTypes.includes(priceType)) {
-            continue;
-        }
-        try {
-            // Tìm giá hiện tại của loại này
-            const existingPriceIndex = product.prices.findIndex(item => item.priceType === priceType);
-            if (existingPriceIndex !== -1) {
-                // Cập nhật giá hiện tại
-                const updateData = {
-                    ...product.prices[existingPriceIndex].toObject(),
-                    ...priceData,
-                    priceType: priceType,
-                };
-                
-                product.prices[existingPriceIndex] = updateData;
-                results.updated.push({
-                    priceType: priceType,
-                    action: 'updated',
-                    data: updateData
-                });
-                
-            } else {
-                // Thêm giá mới
-                if (!priceData.price) {
-                    results.errors.push({
-                        priceType: priceType,
-                        error: 'Giá tiền là bắt buộc khi thêm mới'
-                    });
-                    continue;
-                }
-                
-                const newPrice = {
-                    priceType: priceType,
-                    price: Number(priceData.price),
-                    startDate: priceData.startDate ? new Date(priceData.startDate) : new Date(),
-                    endDate: priceData.endDate ? new Date(priceData.endDate) : null,
-                    note: priceData.note || '',
-                };
-                
-                product.prices.push(newPrice);
-                results.created.push({
-                    priceType: priceType,
-                    action: 'created',
-                    data: newPrice
-                });
-            }
-        } catch (error) {
-            results.errors.push({
-                priceType: priceType,
-                error: error.message
-            });
-        }
+    if (!data.updatePrice || !data.updatePrice.price || !data.updatePrice.priceType) {
+        throw new Error('Không có dữ liệu về giá');
     }
-    // Lưu product sau khi xử lý tất cả
+    const existingPriceType = product.prices.findIndex((el) => el.priceType === data.updatePrice.priceType);
+    
+    if(existingPriceType !== -1){
+        product.prices[existingPriceType] = {
+            ...product.prices[existingPriceType].toObject(),
+            ...data.updatePrice
+        }
+    } else {
+        product.prices.push(data.updatePrice);
+    }
+    
     const savedProduct = await product.save();
-    // Tạo message tổng hợp
-    let message = '';
-    if (results.updated.length > 0) {
-        message += `Cập nhật ${results.updated.length} loại giá. `;
-    }
-    if (results.created.length > 0) {
-        message += `Thêm mới ${results.created.length} loại giá. `;
-    }
-    if (results.errors.length > 0) {
-        message += `${results.errors.length} lỗi xảy ra.`;
-    }
-    
-    return {
-        success: results.errors.length === 0 || (results.updated.length > 0 || results.created.length > 0),
-        message: message.trim(),
-        product: savedProduct,
-        details: {
-            updated: results.updated,
-            created: results.created,
-            errors: results.errors,
-            totalProcessed: results.updated.length + results.created.length,
-            totalErrors: results.errors.length
-        }
-    };
+    return savedProduct;
 });
 module.exports = {
     addProduct,
