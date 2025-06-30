@@ -101,10 +101,11 @@ const addPriceProduct = asyncHandler(async(req, res) => {
 // Cập nhật thông tin giá tiền cho sản phẩm
 const updatePriceProduct = asyncHandler(async(req, res) => {
     const {pid, rid} = req.params;
+    console.log(req.body)
     const response = await ProductService.updatePriceProduct({
         pid,
         rid,
-        updatePrice: req.body.prices
+        data: req.body
     });
     if(!response) {
         return res.status(400).json({
@@ -197,16 +198,17 @@ const deleteProduct = asyncHandler(async(req, res) => {
 });
 const addAndUpdatePriceProduct = asyncHandler(async(req, res) => {
     const {pid} = req.params;
+    console.log(pid);
     const response = await ProductService.addAndUpdatePriceProduct(pid, req.body);
     if(!response){
         return res.status(400).json({
             success: false,
-            message: res.message
+            message: 'Cập nhật giá tiền không thành công thành công'
         });
     }
     return res.status(200).json({
             success: true,
-            message: res.message
+            message: 'Cập nhật giá tiền thành công'
     });
 });
 
