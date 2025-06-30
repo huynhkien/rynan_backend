@@ -12,15 +12,13 @@ const ProductSchema = new mongoose.Schema({
     sold: {type: Number, default: 0},
     category: {type: String},
     tags: [{ tag: String }],
-    prices: [
-        {
-            priceType: String,                  
-            price: Number,                    
-            startDate: Date,                
-            endDate: Date,                  
-            note: String,       
-        }
-    ],
+    prices: [{
+        priceType: { type: String, required: true },
+        price: { type: Number, required: true },
+        startDate: { type: Date },
+        endDate: { type: Date },
+        note: { type: String }
+    }],
     price_reference: {type: Number, required: true},
     specification: {type: String},
     origin: {type: String},
