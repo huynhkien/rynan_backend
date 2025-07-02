@@ -74,11 +74,27 @@ const deleteQuote = asyncHandler(async(req, res) => {
         message: 'Xóa báo giá thành công'
     });
 });
+// Xóa sản phẩm trong báo giá
+const deleteProductQuote = asyncHandler(async(req, res) => {
+    const {qid, pid} = req.params;
+    const response = await QuoteService.deleteProductQuote(qid, rid);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Xóa sản phẩm trong báo giá thất bại'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Xóa sản phẩm trong báo giá thành công'
+    });
+});
 module.exports = {
     addQuote,
     updateQuote,
     findQuoteById,
     findAllQuote,
-    deleteQuote
+    deleteQuote,
+    deleteProductQuote
 }
 
