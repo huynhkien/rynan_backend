@@ -77,7 +77,7 @@ const deleteQuote = asyncHandler(async(req, res) => {
 // Xóa sản phẩm trong báo giá
 const deleteProductQuote = asyncHandler(async(req, res) => {
     const {qid, pid} = req.params;
-    const response = await QuoteService.deleteProductQuote(qid, rid);
+    const response = await QuoteService.deleteProductQuote(qid, pid);
     if(!response){
         return res.status(400).json({
             success: false,
