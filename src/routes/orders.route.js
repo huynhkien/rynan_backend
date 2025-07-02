@@ -12,6 +12,7 @@ router.route('/')
 router.route('/:oid')
             .put(OrderController.updateOrder)
             .get(OrderController.findOrderById);
-router.route('/delete-product-order/:oid/:pid').put(OrderController.deleteProductOrder)
+router.route('/delete-product-order/:oid/:pid').delete(OrderController.deleteProductOrder)
+router.route('/update-product-order/:oid/:pid').put(OrderController.updateProductOrder)
 
 module.exports = router;
