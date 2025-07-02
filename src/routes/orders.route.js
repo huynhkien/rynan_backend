@@ -10,7 +10,7 @@ router.route('/')
 
 
 router.route('/:oid')
-            .put([verifyAccessToken], OrderController.updateOrder)
-            .get([verifyAccessToken], OrderController.findOrderById);
+            .put(OrderController.updateOrder)
+            .get(OrderController.findOrderById);
 
 module.exports = router;
