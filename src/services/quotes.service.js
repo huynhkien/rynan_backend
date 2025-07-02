@@ -25,7 +25,7 @@ const deleteProductQuote = asyncHandler(async (qid, pid) => {
     }
     // Xóa
     quote.products.splice(productQuoteIndex, 1);
-    return await receipt.save();
+    return await quote.save();
 });
 // Xóa báo giá
 const deleteQuote = asyncHandler(async (id) => {
