@@ -1,12 +1,14 @@
 const mongoose = require('mongoose');
 
 const OrderSchema = new mongoose.Schema({
+    code: {type: String},
     products: [{
         pid: {type: mongoose.Types.ObjectId, ref: 'Product'},
         quantity: {type: Number},
         name: {type: String},
         price: {type: Number},
-        thumb: {type: String}
+        thumb: {type: String},
+        priceType: {type: String}
     }],
     status: {
         type: String,
@@ -20,22 +22,18 @@ const OrderSchema = new mongoose.Schema({
         lng: {type: Number}
     },
     total: {type: Number},
-    // Thông tin người nhận hàng => thông tin chỉ xuất hiện khi nhân viên thực hiện nhập đơn hàng 
-    recipient: {
-        name: String,
-        phone: String,
-        address: {
-            province: { code: Number, name: String },
-            district: { code: Number, name: String },
-            ward: { code: Number, name: String },
-            detail: String,       
-            addressAdd: String   
-        }
-    },
     paymentMethod: {
         type: String,
-        enum: ['COD', 'VNPay', 'Momo', 'ZaloPay'],
+        enum: ['COD', 'BANK_TRANSFER', 'SCOD', 'ATM', 'CREDIT_CARD'],
         default: 'COD'
+    },
+    paymentStatus: {
+        type: String,
+        enum: ['PAID', 'UNPAID', 'PARTIALLY_PAID'],
+        default: 'UNPAID'
+    },
+    paymentDueDate: {
+        type: Date
     },
     note: {type: String},
     staff: {type: String},
