@@ -11,6 +11,7 @@ router.route('/:qid')
             .get(quotesController.findQuoteById)
             .put(quotesController.updateQuote)
             .delete(quotesController.deleteQuote);
-
+router.route('/delete-product-quote/:qid/:pid')
+            .delete(quotesController.deleteProductQuote)
 
 module.exports = router;

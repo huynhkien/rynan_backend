@@ -12,5 +12,6 @@ router.route('/')
 router.route('/:oid')
             .put(OrderController.updateOrder)
             .get(OrderController.findOrderById);
+router.route('/delete-product-order/:oid/:pid').put(OrderController.deleteProductOrder)
 
 module.exports = router;
