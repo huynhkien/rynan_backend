@@ -18,16 +18,16 @@ const addOrder = asyncHandler(async(req, res) => {
 // Cập nhật trạng thái đơn hàng
 const updateOrder = asyncHandler(async(req, res) => {
     const {oid} = req.params;
-    const response = await OrderService.updateOrder(oid, req.body.status);
+    const response = await OrderService.updateOrder(oid, req.body);
     if(!response){
         return res.status(400).json({
             success: false,
-            message: 'Cập nhật trạng thái đơn hàng không thành công'
+            message: 'Cập nhật đơn hàng không thành công'
         });
     }
     return res.status(200).json({
         success: true,
-        message: 'Cập nhật trạng thái đơn hàng thành công'
+        message: 'Cập nhật đơn hàng thành công'
     })
 });
 // Cập nhật trạng thái đơn hàng
