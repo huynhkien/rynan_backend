@@ -15,10 +15,20 @@ const findQuoteById = asyncHandler(async(id) => {
 // Tìm tất cả các báo giá
 const findAllQuote = asyncHandler(async() => {
     return await Quote.find();
-})
+});
+// Xóa sản phẩm trong báo giá
+const deleteProductQuote = asyncHandler(async (qid, pid) => {
+  const quote = await Quote.findById(qid);
+  const productQuoteIndex = quote?.products?.findIndex((el) => el.pid.toString() === pid);
+  if (productQuoteIndex === -1) {
+      throw new Error('Không tìm thấy sản phẩm trong báo giá')
+    }
+    // Xóa
+    quote.products.splice(productQuoteIndex, 1);
+    return await receipt.save();
+});
 // Xóa báo giá
 const deleteQuote = asyncHandler(async (id) => {
-    console.log(id)
     return await Quote.findByIdAndDelete(id);
 });
 module.exports = {
@@ -27,4 +37,5 @@ module.exports = {
     findQuoteById,
     findAllQuote,
     deleteQuote,
+    deleteProductQuote
 }

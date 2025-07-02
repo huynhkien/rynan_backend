@@ -32,11 +32,27 @@ const findAllOrder = asyncHandler(async() => {
 const deleteOrder = asyncHandler(async(id) => {
     return await Order.findByIdAndDelete({_id: id});
 });
+// Xóa sản phẩm trong đơn hàng
+const deleteProductOrder = asyncHandler(async (oid, pid) => {
+    const order = await Order.findById(oid);
+    const productOrderIndex = order?.products?.findIndex((el) => el.pid.toString() === pid);
+    if (productOrderIndex === -1) {
+      throw new Error('Không tìm thấy sản phẩm trong đơn hàng');
+    }
+    // Xóa
+    order.products.splice(productIndex, 1);
+    // Cập nhật lại tổng giá
+    order.total = order?.products?.reduce((sum, item) => sum + (item?.price * item?.quantity || 0), 0)
+
+    return await receipt.save();
+});
+
 
 module.exports = {
     addOrder,
     updateOrder,
     findAllOrder,
     findOrderById,
-    deleteOrder
+    deleteOrder,
+    deleteProductOrder
 }
