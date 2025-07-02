@@ -44,7 +44,25 @@ const deleteProductOrder = asyncHandler(async (oid, pid) => {
     // Cập nhật lại tổng giá
     order.total = order?.products?.reduce((sum, item) => sum + (item?.price * item?.quantity || 0), 0)
 
-    return await receipt.save();
+    return await order.save();
+});
+// Cập nhật sản phẩm trong đơn hàng
+const updateProductOrder = asyncHandler(async (oid, pid, data) => {
+    const order = await Order.findById(oid);
+    const productOrderIndex = order?.products?.findIndex((el) => el.pid.toString() === pid);
+    if (productOrderIndex === -1) {
+      throw new Error('Không tìm thấy sản phẩm trong đơn hàng');
+    }
+    // Cập nhật
+    const updateProduct = {
+        ...order.products[productOrderIndex].toObject(),
+        ...data
+    }
+    order.products[productOrderIndex] = updateProduct
+    // Cập nhật lại tổng giá
+    order.total = order?.products?.reduce((sum, item) => sum + (item?.price * item?.quantity || 0), 0)
+
+    return await order.save();
 });
 
 
@@ -54,5 +72,6 @@ module.exports = {
     findAllOrder,
     findOrderById,
     deleteOrder,
-    deleteProductOrder
+    deleteProductOrder,
+    updateProductOrder
 }
