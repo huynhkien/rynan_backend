@@ -7,22 +7,13 @@ const asyncHandler = require('express-async-handler');
 const addOrder = asyncHandler(async(data) => {
     return await Order.create(data);
 });
-// Cập nhật trạng thái đơn hàng
-const updateOrder = asyncHandler(async(id, status) => {
-    const order = await findOrderById(id);
-    if(!order) throw new Error('Không tìm thấy thông tin đơn hàng');
-    // Kiểm tra tra trạng trái
-    // Nếu hủy đơn => hoàn trả lại số lượng trong kho
-    if(status === 'Cancelled'){
-        for(const product of order.products){
-            await InventoryService.updateProductQuantityInventory({id: product.pid, quantity: product.quantity, operation: 'add'})
-        }
-    }
-    return await Order.findByIdAndUpdate(id, {status: status}, {new: true});
-});
 // Tìm đơn hàng theo id
 const findOrderById = asyncHandler(async(id) => {
     return await Order.findById(id);
+});
+// Cập nhật trạng thái đơn hàng
+const updateOrder = asyncHandler(async(id, data) => {
+    return await Order.findByIdAndUpdate(id, data, {new: true});
 });
 // Tìm tất cả các đơn hàng
 const findAllOrder = asyncHandler(async() => {
@@ -40,7 +31,7 @@ const deleteProductOrder = asyncHandler(async (oid, pid) => {
       throw new Error('Không tìm thấy sản phẩm trong đơn hàng');
     }
     // Xóa
-    order.products.splice(productIndex, 1);
+    order.products.splice(productOrderIndex, 1);
     // Cập nhật lại tổng giá
     order.total = order?.products?.reduce((sum, item) => sum + (item?.price * item?.quantity || 0), 0)
 
