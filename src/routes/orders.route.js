@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.route('/')
             .post([verifyAccessToken],OrderController.addOrder)
-            .get([verifyAccessToken, checkUserPermission],OrderController.findAllOrder);
+            .get(OrderController.findAllOrder);
 
 
 router.route('/:oid')
