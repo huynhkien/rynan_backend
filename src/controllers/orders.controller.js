@@ -30,6 +30,21 @@ const updateOrder = asyncHandler(async(req, res) => {
         message: 'Cập nhật trạng thái đơn hàng thành công'
     })
 });
+// Cập nhật trạng thái đơn hàng
+const updateProductOrder = asyncHandler(async(req, res) => {
+    const {oid, pid} = req.params;
+    const response = await OrderService.updateProductOrder(oid, pid, req.body);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Cập nhật sản phẩm trong đơn hàng không thành công'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Cập nhật sản phẩm trong đơn hàng thành công'
+    })
+});
 // Tìm đơn hàng theo id 
 const findOrderById = asyncHandler(async(req, res) => {
     const {oid} = req.params;
@@ -95,5 +110,6 @@ module.exports = {
     findOrderById,
     findAllOrder,
     deleteOrder,
-    deleteProductOrder
+    deleteProductOrder,
+    updateProductOrder
 }
