@@ -5,7 +5,7 @@ const express = require('express');
 const router = express.Router();
 
 router.route('/')
-            .post([verifyAccessToken],OrderController.addOrder)
+            .post(OrderController.addOrder)
             .get(OrderController.findAllOrder);
 
 
