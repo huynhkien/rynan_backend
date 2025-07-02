@@ -22,7 +22,7 @@ const updateOrder = asyncHandler(async(id, status) => {
 });
 // Tìm đơn hàng theo id
 const findOrderById = asyncHandler(async(id) => {
-    return await Order.findById({_id: id});
+    return await Order.findById(id);
 });
 // Tìm tất cả các đơn hàng
 const findAllOrder = asyncHandler(async() => {
