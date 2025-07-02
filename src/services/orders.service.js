@@ -5,14 +5,6 @@ const asyncHandler = require('express-async-handler');
 
 // Tạo đơn hàng
 const addOrder = asyncHandler(async(data) => {
-    for(const product of data.products){
-        const productData = await ProductService.findProductById(product.pid);
-        if(!productData) throw new Error('Không tìm thấy thông tin sản phẩm');
-        // Cập nhật số lượng sản phẩm đã bán
-        await ProductService.updateSoldProduct(product.pid, product.quantity);
-        // Cập nhật số lượng sản phẩm tồn kho
-        await InventoryService.updateProductQuantityInventory({id: product.pid, quantity: product.quantity, operation: 'minus'})
-    }
     return await Order.create(data);
 });
 // Cập nhật trạng thái đơn hàng
