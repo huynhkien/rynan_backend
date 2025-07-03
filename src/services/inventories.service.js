@@ -6,15 +6,11 @@ const addProductInventory = asyncHandler(async(data, session) => {
     const result = await Inventory.create([data], {session});
     return result[0];
 });
-// Cập nhật số lượng sản phẩm tồn kho
-const updateProductQuantityInventory = asyncHandler(async({id, quantity, operation}, session) => {
-    const updateQuantity = operation === 'add' ? quantity : -quantity;
+// Cập nhật tồn kho
+const updateInventory = asyncHandler(async({id, data}, session) => {
+    
     return await Inventory.findByIdAndUpdate(
-        {productId: id},
-        {
-            $inc: {quantity: updateQuantity},
-            lastUpdated: Date.now()
-        },
+        id, data,
         {new: true, session, runValidators: true}
     );
 });
@@ -28,7 +24,7 @@ const findAllInventory = asyncHandler(async() => {
 });
 module.exports = {
     addProductInventory,
-    updateProductQuantityInventory,
+    updateInventory,
     findAllInventory,
     findProductInventory
 
