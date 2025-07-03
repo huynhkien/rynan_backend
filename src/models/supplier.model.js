@@ -4,10 +4,9 @@ const SupplierSchema = new mongoose.Schema({
   name: { type: String, required: true, maxLength: 255 },         // Tên nhà cung cấp
   code: { type: String, unique: true },                           // Mã nhà cung cấp (NCC001, etc.)
   
-  contactPerson: { type: String },                                // Người liên hệ chính
+  contact_person: { type: String },                                // Người liên hệ chính
   phone: { type: String },                                        // Số điện thoại
   email: { type: String },                                        // Email
-
   address: {
         province: {
             code: Number,
@@ -24,14 +23,14 @@ const SupplierSchema = new mongoose.Schema({
         detail: {type: String},
         addressAdd: {type: String}
     },                                                              // Địa chỉ
-  taxCode: { type: String },                                      // Mã số thuế (nếu có)
-  bankAccount: {
-    bankName: { type: String },
-    accountNumber: { type: String }
+  tax_code: { type: String },                                      // Mã số thuế (nếu có)
+  bank_account: {
+    bank_name: { type: String },
+    account_number: { type: String }
   },
 
   note: { type: String },                                         // Ghi chú khác
-  isActive: { type: Boolean, default: true },                     // Trạng thái hoạt động
+  isActive: { type: String, default: true },                     // Trạng thái hoạt động
 }, {
   timestamps: true
 });
