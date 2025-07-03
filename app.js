@@ -14,6 +14,10 @@ const productRouter = require('./src/routes/products.route');
 const orderRouter = require('./src/routes/orders.route');
 const specificationRouter = require('./src/routes/specifications.route');
 const quoteRouter = require('./src/routes/quotes.route');
+const receiptRouter = require('./src/routes/receipts.route');
+const inventoryRouter = require('./src/routes/inventories.route');
+const materialRouter = require('./src/routes/materials.route');
+const supplierRouter = require('./src/routes/suppliers.route');
 
 // Ngăn chặn injection NoSQL
 app.use((req, res, next) => {
@@ -85,6 +89,10 @@ app.use('/api/category', categoryRouter);
 app.use('/api/order', orderRouter);
 app.use('/api/specification', specificationRouter); 
 app.use('/api/quote', quoteRouter); 
+app.use('/api/receipt', receiptRouter); 
+app.use('/api/inventory', inventoryRouter); 
+app.use('/api/material', materialRouter); 
+app.use('/api/supplier', supplierRouter); 
 // Bắt các route không khớp, trả về lỗi 404
 app.use(notFound)
 // Xử lý lỗi
