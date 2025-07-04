@@ -7,44 +7,17 @@ const mongoose = require('mongoose');
 // Tạo phiếu nhập
 const addImportReceipt = asyncHandler(async (req, res) => {
     if (!req.body) throw new Error('Thiếu thông tin phiếu nhập');
-    // Khởi tạo session => đảm bảo tính nhất quán dữ liệu
-    const session = await mongoose.startSession();
-    try {
-        await session.withTransaction(async () => {
-            // lặp qua tất cả sản phẩm
-            for(const product of req.body.products) {
-                // Kiểm tra trong dữ liệu của Inventory đã có sản phẩm chưa
-                const productInventory = await InventoryService.findProductInventory(product.pid, session);
-                if (productInventory) {
-                    // Nếu có => cập nhật số lượng sản phẩm
-                    await InventoryService.updateProductQuantityInventory({ id: product.pid, quantity: product.quantity, operation: 'add' },session);
-                } else {
-                    // Nếu chưa => thêm sản phẩm vào Inventory
-                    await InventoryService.addProductInventory(product, session);
-                }
-            }
-            // Tạo phiếu nhập
-            const response = await ReceiptService.addReceipt(req.body);
-            if (!response) {
-                res.status(200).json({
-                    success: false,
-                    message: 'Tạo phiếu nhập thất bại'
-                });
-            }
-            res.status(200).json({
-                success: true,
-                message: 'Tạo phiếu nhập thành công'
-            });
-        });
-    } catch (error) {
-        res.status(400).json({
+    const response = await ReceiptService.addReceipt(req.body);
+    if(!response){
+        return res.status(400).json({
             success: false,
-            message: `Lỗi ${error.message}`
+            message: 'Nhập kho thất bại'
         });
-    } finally {
-        // Kết thúc session
-        await session.endSession();
     }
+    return res.status(200).json({
+        success: true,
+        message: 'Tạo phiếu nhập kho thành công. Vui lòng chờ xét duyệt từ quản lý'
+    })
 });
 
 // Tạo phiếu xuất hàng
