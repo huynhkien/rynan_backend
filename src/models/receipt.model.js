@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const ReceiptSchema = new mongoose.Schema({
-    handleBy: {
+    staff: {
         type: mongoose.Types.ObjectId, 
         ref: 'User',
         required: true
@@ -12,7 +12,19 @@ const ReceiptSchema = new mongoose.Schema({
         quantity: {type: Number, required: true},
         thumb: {type: String},
         price: {type: Number},
+        specification: {type: String},
         priceType: {type: String},
+        batchNumber: {type: String}, // Số lô hàng
+        expiryDate: {type: Date}, // Hạn sử dụng
+        manufacturingDate: {type: Date} // Ngày sản xuất
+
+    }],
+    materials: [{
+        mid: {type: mongoose.Types.ObjectId, ref: 'Product'},
+        name: {type: String},
+        specification: {type: String},
+        quantity: {type: Number, required: true},
+        price: {type: Number},
         batchNumber: {type: String}, // Số lô hàng
         expiryDate: {type: Date}, // Hạn sử dụng
         manufacturingDate: {type: Date} // Ngày sản xuất
@@ -30,10 +42,20 @@ const ReceiptSchema = new mongoose.Schema({
     total: {type: String},
     status: {
         type: String,
-        enum: ['pending', 'confirmed', 'completed', 'cancelled'],
+        enum: ['pending', 'confirmed', 'cancelled'],
         default: 'pending'
     },
     approvedBy: {type: mongoose.Types.ObjectId, ref: 'User'},
+    paymentMethod: {
+        type: String,
+        enum: ['COD', 'BANK_TRANSFER', 'SCOD', 'ATM', 'CREDIT_CARD'],
+        default: 'COD'
+    },
+    paymentStatus: {
+        type: String,
+        enum: ['PAID', 'UNPAID', 'PARTIALLY_PAID'],
+        default: 'UNPAID'
+    },
 }, {
     timestamps: true
 });
