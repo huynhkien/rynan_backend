@@ -145,12 +145,12 @@ const findAllReceipt = asyncHandler(async(req, res) => {
     if(!response){
         return res.status(400).json({
             success: false,
-            message: 'Không tim thấy thông tin phiếu'
+            data: 'Không tim thấy thông tin phiếu'
         });
     }
     return res.status(200).json({
         success: true,
-        message: response
+        data: response
     });
 });
 // Xóa thông tin sản phẩm trong phiếu 
