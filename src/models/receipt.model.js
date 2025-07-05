@@ -10,8 +10,6 @@ const ReceiptSchema = new mongoose.Schema({
         pid: {type: mongoose.Types.ObjectId, ref: 'Product'},
         name: {type: String},
         quantity: {type: Number, required: true},
-        thumb: {type: String},
-        price: {type: Number},
         specification: {type: String},
         priceType: {type: String},
         batchNumber: {type: String}, // Số lô hàng
@@ -36,6 +34,8 @@ const ReceiptSchema = new mongoose.Schema({
         default: 'import',
         required: true
     },
+    produced_at: {type: String},
+    supplier: {type: String},
     exportedTo: {type: mongoose.Types.ObjectId, ref: 'User'},
     code: {type: String, unique: true},
     note: {type: String}, 
@@ -43,18 +43,15 @@ const ReceiptSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: ['pending', 'confirmed', 'cancelled'],
-        default: 'pending'
     },
     approvedBy: {type: mongoose.Types.ObjectId, ref: 'User'},
     paymentMethod: {
         type: String,
         enum: ['COD', 'BANK_TRANSFER', 'SCOD', 'ATM', 'CREDIT_CARD'],
-        default: 'COD'
     },
     paymentStatus: {
         type: String,
         enum: ['PAID', 'UNPAID', 'PARTIALLY_PAID'],
-        default: 'UNPAID'
     },
 }, {
     timestamps: true
