@@ -12,7 +12,9 @@ router.route('/:rid')
             .put(receiptController.updateReceipt)
             .delete(receiptController.deleteReceipt);
 
-router.route('/update-product-receipt/:rid/:pid').get(receiptController.updateProductReceipt);
+router.route('/update-product-receipt/:rid/:pid').put(receiptController.updateProductReceipt);
+router.route('/update-material-receipt/:rid/:mid').put(receiptController.updateMaterialReceipt);
 router.route('/delete-product-receipt/:rid/:pid').delete(receiptController.deleteProductReceipt);
+router.route('/delete-material-receipt/:rid/:mid').delete(receiptController.deleteMaterialReceipt);
 
 module.exports = router;
