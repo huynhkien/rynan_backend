@@ -10,6 +10,7 @@ const ReceiptSchema = new mongoose.Schema({
         pid: {type: mongoose.Types.ObjectId, ref: 'Product'},
         name: {type: String},
         quantity: {type: Number, required: true},
+        price: {type: Number},
         specification: {type: String},
         priceType: {type: String},
         batchNumber: {type: String}, // Số lô hàng
@@ -35,11 +36,16 @@ const ReceiptSchema = new mongoose.Schema({
         required: true
     },
     produced_at: {type: String},
+    deliveryMethod: {type: String},
+    deliveryDate: {type: Date},
     supplier: {type: String},
     exportedTo: {type: mongoose.Types.ObjectId, ref: 'User'},
     code: {type: String, unique: true},
     note: {type: String}, 
-    total: {type: String},
+    total: {type: Number},
+    paymentDueDate: {
+        type: Date
+    },
     status: {
         type: String,
         enum: ['pending', 'confirmed', 'cancelled'],

@@ -35,6 +35,7 @@ const OrderSchema = new mongoose.Schema({
     paymentDueDate: {
         type: Date
     },
+    deliveryMethod: {type: String},
     note: {type: String},
     staff: {type: String},
     expectedDeliveryDate: {type: Date}
