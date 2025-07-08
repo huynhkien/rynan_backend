@@ -8,6 +8,11 @@ const addReceipt = asyncHandler(async(data)=> {
 const updateReceipt = asyncHandler(async(rid, data) => {
     return await Receipt.findByIdAndUpdate(rid, data, {new: true});
 });
+// Cập nhật trạng thái phiếu
+const updateStatusReceipt = asyncHandler(async(rid, status, approvedBy) => {
+    if(! rid  || !status | !approvedBy) throw new Error('Vui lòng điền đầy đủ các thông tin')
+    return await Receipt.findByIdAndUpdate(rid, {status: status, approvedBy: approvedBy}, {new: true});
+})
 // Tìm thông tin phiếu theo id
 const findReceiptById = asyncHandler(async(id) => {
     return await Receipt.findById({_id: id});
@@ -26,7 +31,7 @@ const updateProductReceipt = asyncHandler(async(rid, pid, data) => {
     return receipt.save();
 });
 
-// Cập nhật thông tin nguyên liêuk trong phiếu
+// Cập nhật thông tin nguyên liêu trong phiếu
 const updateMaterialReceipt = asyncHandler(async(rid, mid, data) => {
     if(!rid) throw new Error('Không tìm thấy id');
     console.log(rid);
@@ -79,5 +84,6 @@ module.exports = {
     findAllReceipt,
     deleteReceipt,
     deleteProductReceipt,
-    deleteMaterialReceipt
+    deleteMaterialReceipt,
+    updateStatusReceipt
 }
