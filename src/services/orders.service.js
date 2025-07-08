@@ -1,10 +1,28 @@
 const Order = require('../models/order.model');
-const ProductService = require('./products.service');
-const InventoryService = require('./inventories.service');
+const Inventory = require('../models/inventory.model');
 const asyncHandler = require('express-async-handler');
 
 // Tạo đơn hàng
 const addOrder = asyncHandler(async(data) => {
+    const products = data.products || [];
+    if(products.length > 0) {
+        for(let i = 0; i < products.length; i++){
+            const item = products[i];
+            const existingProduct = await Inventory.findOne({ productId: item.pid });
+            // Kiểm tra nếu sản phẩm không tồn tại trong kho
+            if(!existingProduct){
+                throw new Error(`Sản phẩm ${item.name} không tồn tại trong kho`);
+            }
+            // Kiểm tra số lượng tồn kho phải lớn hơn 50 
+            if(existingProduct.currentStock <= 100){
+                throw new Error(`Sản phẩm ${item.name} có số lượng tồn kho (${existingProduct.currentStock}) không đủ. Cần tối thiểu 101 sản phẩm để tạo đơn hàng`);
+            }
+            // Kiểm tra số lượng đặt hàng không được vượt quá tồn kho
+            if(existingProduct.currentStock < item.quantity){
+                throw new Error(`Sản phẩm ${item.name} chỉ còn ${existingProduct.currentStock} trong kho, không thể đặt ${item.quantity} sản phẩm`);
+            }
+        }
+    }
     return await Order.create(data);
 });
 // Tìm đơn hàng theo id
@@ -13,6 +31,51 @@ const findOrderById = asyncHandler(async(id) => {
 });
 // Cập nhật trạng thái đơn hàng
 const updateOrder = asyncHandler(async(id, data) => {
+    const products = data.products || [];
+    if(products.length > 0) {
+        for(let i = 0; i < products.length; i++){
+            const item = products[i];
+            const existingProduct = await Inventory.findOne({ productId: item.pid });
+            // Kiểm tra nếu sản phẩm không tồn tại trong kho
+            if(!existingProduct){
+                throw new Error(`Sản phẩm ${item.name} không tồn tại trong kho`);
+            }
+            // Kiểm tra số lượng tồn kho phải lớn hơn 50 
+            if(existingProduct.currentStock <= 100){
+                throw new Error(`Sản phẩm ${item.name} có số lượng tồn kho (${existingProduct.currentStock}) không đủ. Cần tối thiểu 101 sản phẩm để cập nhật đơn hàng`);
+            }
+            // Kiểm tra số lượng đặt hàng không được vượt quá tồn kho
+            if(existingProduct.currentStock < item.quantity){
+                throw new Error(`Sản phẩm ${item.name} chỉ còn ${existingProduct.currentStock} trong kho, không thể đặt ${item.quantity} sản phẩm`);
+            }
+            if(data.status === 'Received' || data.status === 'Succeed' || data.status === 'Delivering' ){
+                const previousStock = existingProduct.currentStock;
+                const newQuantity = item.quantity || 0;
+                const newStock = previousStock - newQuantity; 
+                const newApproval = {
+                    approvedBy: data.staff,
+                    approvedAt: new Date(),
+                    action: 'removed',
+                    quantityChange: -newQuantity,
+                    previousStock,
+                    newStock,
+                    notes: item.notes || `Tạo đơn hàng mới ${id}`
+                }
+                await Inventory.findOneAndUpdate(
+                    { productId: item.pid },
+                    {
+                        $inc: { currentStock: -newQuantity },
+                        $push: { approvalHistory: newApproval },
+                        $set: { 
+                            lastUpdated: new Date(), 
+                            approvedBy: data.staff 
+                        }
+                    },
+                    { new: true }
+                );
+            }
+        }
+    }
     return await Order.findByIdAndUpdate(id, data, {new: true});
 });
 // Tìm tất cả các đơn hàng
