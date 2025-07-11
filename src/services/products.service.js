@@ -25,7 +25,7 @@ const findAllProduct = asyncHandler(async({queries, req}) => {
         delete formatQueries.q;
         queryObject = {
         $or: [
-            {name: {$regex: queries.q, $options: 'i'}},
+            {name_vn: {$regex: queries.q, $options: 'i'}},
             {category: {$regex: queries.q, $options: 'i'}},
         ]
         }
