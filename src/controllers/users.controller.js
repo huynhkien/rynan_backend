@@ -224,6 +224,25 @@ const deleteUser = asyncHandler(async(req, res) => {
         success: true,
         message: 'Xóa thông tin thành công'
     })
+});
+// Phân quyền nhân viên
+const addRole = asyncHandler(async(req, res) => {
+    if(req.file) req.body.avatar = {
+        url: req.file.path,
+        public_id: req.file.filename
+    }
+    req.body.password = 123456789;
+    const response = await UserService.addRole(req.body);
+    if(!response) {
+        return res.status(400).json({
+            success: false,
+            message: 'Phân quyền người dùng không thành công'
+        });
+    }
+    return res.status(200).json({
+            success: true,
+            message: 'Phân quyền người dùng thành công'
+    });
 })
 module.exports = {
     register,
@@ -239,5 +258,6 @@ module.exports = {
     updateInfoByAdmin,
     updateAddress,
     addUserByAdmin,
-    deleteUser
+    deleteUser,
+    addRole
 }
