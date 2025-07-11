@@ -227,11 +227,12 @@ const deleteUser = asyncHandler(async(req, res) => {
 });
 // Phân quyền nhân viên
 const addRole = asyncHandler(async(req, res) => {
+    console.log(req.body)
     if(req.file) req.body.avatar = {
         url: req.file.path,
         public_id: req.file.filename
     }
-    req.body.password = 123456789;
+    req.body.password = '123456789';
     const response = await UserService.addRole(req.body);
     if(!response) {
         return res.status(400).json({
