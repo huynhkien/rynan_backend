@@ -112,8 +112,8 @@ const deleteUser = asyncHandler(async(id) => {
 });
 // Thêm quyền
 const addRole = asyncHandler(async(data) =>{
-    if(!data) throw new Error('Thiếu thông tin nhân viên, vui lòng nhập đầy đủ thông tin')
-    const user = await User.findOne({email});
+    if(!data) throw new Error('Thiếu thông tin nhân viên, vui lòng nhập đầy đủ thông tin');
+    const user = await User.findOne({email: data?.email});
     if(user) throw new Error('Email đã được đăng ký !');
     const html = templateMailAuth({title: 'Phân quyền nhân viên', name: data?.name, rolePassword: data?.password});
     await sendMail({email, html, subject: 'Hoàn tất phân quyền nhân viên'});
