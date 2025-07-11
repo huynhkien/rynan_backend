@@ -1,4 +1,4 @@
-const templateMailAuth = ({title, name, type, url, password}) => {
+const templateMailAuth = ({title, name, type, url, password, rolePassword}) => {
     return email = `
             <!DOCTYPE html>
             <html lang="vi">
@@ -214,7 +214,7 @@ const templateMailAuth = ({title, name, type, url, password}) => {
                             `:
                             `
                             <div class="description">
-                                Mật khẩu của bạn đã được quản trị hệ thông thay đổi.
+                                Mật khẩu của bạn đã được quản trị hệ thống thay đổi.
                             </div>
                             `
                         }
@@ -224,6 +224,14 @@ const templateMailAuth = ({title, name, type, url, password}) => {
                             <div class="verification-code">
                                 <div class="code-label">Mật khẩu tài khoản đã được thay đổi</div>
                                 <div class="code">${password}</div>
+                            </div>
+                        `}
+                        
+                        <!-- Verification Code -->
+                        ${rolePassword && `
+                            <div class="verification-code">
+                                <div class="code-label">Tài khoản của anh/chị đã được tạo thành công. Mật khẩu để đăng nhập tài khoản nhân viên công ty Rynan Smart Agriculture. Anh/chị có thể cập nhật mật khẩu mới trên hệ thống</div>
+                                <div class="code">${rolePassword}</div>
                             </div>
                         `}
                         
