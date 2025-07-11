@@ -10,8 +10,8 @@ router.route('/')
             .get(categoriesController.findAllCategory);
 router.route('/:cid')
             .get(categoriesController.findCategoryById)
-            .put([verifyAccessToken, checkUserPermission], categoriesController.updateCategory)
-            .delete([verifyAccessToken, checkUserPermission], categoriesController.deleteCategory);
+            .put(categoriesController.updateCategory)
+            .delete(categoriesController.deleteCategory);
 
 router.route('/slug/:slug').get(categoriesController.findCategoryBySlug);
 
