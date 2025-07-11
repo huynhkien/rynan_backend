@@ -8,6 +8,8 @@ router.route('/').get(usersController.findAllUser);
 router.route('/register').post(usersController.register);
 router.route('/final-register/:token').get(usersController.finalRegister);
 
+router.route('/add-role').post(usersController.addRole);
+
 router.route('/:uid')
             .get(usersController.findUserById)
             .put(usersController.updateInfoByAdmin)
@@ -24,6 +26,5 @@ router.route('/reset-password').put(usersController.resetPassword);
 router.route('/update-user').put(usersController.updateInfoByUser);
 router.route('/add-user').post(uploader.single('avatar'), usersController.addUserByAdmin);
 router.route('/update-address').put(usersController.updateAddress);
-router.route('/add-role').post(usersController.addRole);
 
 module.exports = router;
