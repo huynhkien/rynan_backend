@@ -109,9 +109,20 @@ const updateAddress = asyncHandler(async(id, data) => {
 // Xóa thông tin
 const deleteUser = asyncHandler(async(id) => {
     return await User.findByIdAndDelete(id);
-})
+});
+// Thêm quyền
+const addRole = asyncHandler(async(data) =>{
+    if(!data) throw new Error('Thiếu thông tin nhân viên, vui lòng nhập đầy đủ thông tin')
+    const user = await User.findOne({email});
+    if(user) throw new Error('Email đã được đăng ký !');
+    const html = templateMailAuth({title: 'Phân quyền nhân viên', name: data?.name, rolePassword: data?.password});
+    await sendMail({email, html, subject: 'Hoàn tất phân quyền nhân viên'});
+    return await User.create(req.body);
+});
+       
 module.exports = {
     register,
+    addRole,
     finalRegister,
     findUserById,
     findAllUser,
