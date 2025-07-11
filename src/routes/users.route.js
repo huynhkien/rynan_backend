@@ -8,7 +8,7 @@ router.route('/').get(usersController.findAllUser);
 router.route('/register').post(usersController.register);
 router.route('/final-register/:token').get(usersController.finalRegister);
 
-router.route('/add-role').post(usersController.addRole);
+router.route('/add-role').post(uploader.single('avatar'), usersController.addRole);
 
 router.route('/:uid')
             .get(usersController.findUserById)
