@@ -245,6 +245,22 @@ const addRole = asyncHandler(async(req, res) => {
             message: 'Phân quyền người dùng thành công'
     });
 })
+// check mail
+const checkMail = asyncHandler(async(req, res) => {
+    const {email} = req.body;
+    console.log(email)
+    const response = await UserService.checkMail(email);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Email không tồn tại, vui lòng nhập email khác.'
+        });
+    }
+    return res.status(200).json({
+            success: true,
+            message: 'Email tồn tại'
+        });
+})
 module.exports = {
     register,
     finalRegister,
@@ -260,5 +276,6 @@ module.exports = {
     updateAddress,
     addUserByAdmin,
     deleteUser,
-    addRole
+    addRole,
+    checkMail
 }
