@@ -90,22 +90,35 @@ const resetPassword = asyncHandler(async(password, token) => {
 })
 // Thêm thông tin 
 const addUserByAdmin = asyncHandler(async(data) => {
+    console.log(data);
+    if(data.address && typeof data.address === 'string') {
+        data.address = JSON.parse(data.address);
+    }
     return await User.create(data);
 })
 // Cập nhật thông tin người dùng 
 const updateInfoByUser = asyncHandler(async(id, data) => {
+    if(data.address && typeof data.address === 'string') {
+        data.address = JSON.parse(data.address);
+    }
     return await User.findByIdAndUpdate(id, data, {new: true}).select('-password -role');
 })
 const updateInfoByAdmin = asyncHandler(async(id, data) => {
+    if(data.address && typeof data.address === 'string') {
+        data.address = JSON.parse(data.address);
+    }
     const result = await User.findByIdAndUpdate(id, data, {new: true});
     if(data?.password){
         const html = templateMailAuth({title: 'Thay đổi mật khẩu', name: data?.name, password: data?.password});
-        await sendMail({email, html, subject: 'Thay đổi mật khẩu'});
+        await sendMail({email: data.email, html, subject: 'Thay đổi mật khẩu'});
     }
     return result;
 });
 // Cập nhật địa chỉ người dùng
 const updateAddress = asyncHandler(async(id, data) => {
+    if(data && typeof data === 'string') {
+        data = JSON.parse(data);
+    }
     return await User.findByIdAndUpdate(id, {address: data}, {new: true});
 })
 // Xóa thông tin
@@ -115,11 +128,15 @@ const deleteUser = asyncHandler(async(id) => {
 // Thêm quyền
 const addRole = asyncHandler(async(data) =>{
     if(!data) throw new Error('Thiếu thông tin nhân viên, vui lòng nhập đầy đủ thông tin');
+    console.log(data);
+    if(data.address && typeof data.address === 'string') {
+        data.address = JSON.parse(data.address);
+    }
     const user = await User.findOne({email: data?.email});
     if(user) throw new Error('Email đã được đăng ký !');
     const html = templateMailAuth({title: 'Phân quyền nhân viên', name: data?.name, rolePassword: data?.password});
-    await sendMail({email, html, subject: 'Hoàn tất phân quyền nhân viên'});
-    return await User.create(req.body);
+    await sendMail({email: data.email, html, subject: 'Hoàn tất phân quyền nhân viên'});
+    return await User.create(data);
 });
 // Check mail
 const checkMail = asyncHandler(async (email) => {
