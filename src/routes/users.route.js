@@ -26,5 +26,5 @@ router.route('/reset-password').put(usersController.resetPassword);
 router.route('/update-user').put(usersController.updateInfoByUser);
 router.route('/add-user').post(uploader.single('avatar'), usersController.addUserByAdmin);
 router.route('/update-address').put(usersController.updateAddress);
-
+router.route('/check-mail').post(usersController.checkMail);
 module.exports = router;
