@@ -3,7 +3,7 @@ const asyncHandler = require('express-async-handler');
 const crypto = require('crypto');
 const {templateMailAuth} = require('../utils/emailTemplate');
 const sendMail = require('../utils/sendMail');
-const axios = require('assert');
+const axios = require('axios');
 const config = require('../config/config');
 const { generateAccessToken, generateRefreshToken } = require('../middlewares/auth');
 
