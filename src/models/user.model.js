@@ -52,7 +52,8 @@ const userSchema = new mongoose.Schema({
     website: {type: String},
     invoice_address: {type: String},
     staff: {type: mongoose.Types.ObjectId, ref: 'User', default: null},
-    code: {type: String}
+    code: {type: String},
+    note: {type: String}
 },{
     timestamps: true
 })
