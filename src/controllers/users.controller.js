@@ -179,6 +179,8 @@ const updateInfoByUser = asyncHandler(async(req, res) => {
 })
 const updateInfoByAdmin = asyncHandler(async(req, res) => {
     const {uid} = req.params;
+    console.log(uid);
+    console.log(req.body)
     if(req.body?.password){
         const salt = bcrypt.genSaltSync(15);
         req.body.password = await bcrypt.hash(req.body.password, salt);
@@ -227,7 +229,6 @@ const deleteUser = asyncHandler(async(req, res) => {
 });
 // Phân quyền nhân viên
 const addRole = asyncHandler(async(req, res) => {
-    console.log(req.body)
     if(req.file) req.body.avatar = {
         url: req.file.path,
         public_id: req.file.filename
