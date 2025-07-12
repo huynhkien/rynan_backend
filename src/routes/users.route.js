@@ -12,7 +12,7 @@ router.route('/add-role').post(uploader.single('avatar'), usersController.addRol
 
 router.route('/:uid')
             .get(usersController.findUserById)
-            .put(usersController.updateInfoByAdmin)
+            .put(uploader.single('avatar'),usersController.updateInfoByAdmin)
             .delete(usersController.deleteUser);
 
 router.route('/find-user').get(usersController.findUserByToken);
@@ -23,7 +23,7 @@ router.route('/logout').get(usersController.logout);
 router.route('/forgot-password').get(usersController.forgotPassword);
 router.route('/reset-password').put(usersController.resetPassword);
 
-router.route('/update-user').put(usersController.updateInfoByUser);
+router.route('/update-user').put(uploader.single('avatar'),usersController.updateInfoByUser);
 router.route('/add-user').post(uploader.single('avatar'), usersController.addUserByAdmin);
 router.route('/update-address').put(usersController.updateAddress);
 router.route('/check-mail').post(usersController.checkMail);
