@@ -42,6 +42,10 @@ const sendMail = asyncHandler(async({email, html, subject}) => {
       pass: process.env.EMAIL_APP_PASSWORD,
     },
   });
+  console.log('Email credentials check:', {
+    user: process.env.EMAIL_NAME,
+    pass: process.env.EMAIL_APP_PASSWORD ? 'Set' : 'Not set'
+  });
 
   const info = await transporter.sendMail({
     from: '"Rynan Smart Agriculture" <info@rynan.vn>', 

@@ -1,11 +1,11 @@
 const templateMailAuth = ({title, name, type, url, password, rolePassword}) => {
-    return email = `
+    return `
             <!DOCTYPE html>
             <html lang="vi">
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>{Xác Thực Tài Khoản}</title>
+                <title>Xác Thực Tài Khoản</title>
                 <style>
                     * {
                         margin: 0;
@@ -195,24 +195,23 @@ const templateMailAuth = ({title, name, type, url, password, rolePassword}) => {
                 <div class="email-container">
                     <!-- Header -->
                     <div class="header">
-                        <h1>${title}</h1>
+                        <h1>${title || 'Xác Thực Tài Khoản'}</h1>
                         <p>Chào mừng bạn đến với hệ thống của chúng tôi</p>
                     </div>
                     
                     <!-- Content -->
                     <div class="content">
-                        ${name && `
+                        ${name ? `
                             <div class="welcome-text">
                                 Xin chào <strong>${name}</strong>,
                             </div>
-                        `}
+                        ` : ''}
                         
                         ${type ? `
                             <div class="description">
                                 ${type === 'register' ? 'Cảm ơn bạn đã đăng ký tài khoản với chúng tôi! Để hoàn tất quá trình đăng ký và bảo mật tài khoản của bạn, vui lòng xác thực địa chỉ email bằng cách sử dụng mã xác thực bên dưới' : 'Cảm ơn bạn đã đăng ký tài khoản với chúng tôi! Để hoàn tất quá trình lấy lại mật khẩu và bảo mật tài khoản của bạn, vui lòng xác thực địa chỉ email bằng cách sử dụng mã xác thực bên dưới'}
                             </div>
-                            `:
-                            `
+                            ` : `
                             <div class="description">
                                 Mật khẩu của bạn đã được quản trị hệ thống thay đổi.
                             </div>
@@ -220,24 +219,23 @@ const templateMailAuth = ({title, name, type, url, password, rolePassword}) => {
                         }
                         
                         <!-- Verification Code -->
-                        ${password && `
+                        ${password ? `
                             <div class="verification-code">
                                 <div class="code-label">Mật khẩu tài khoản đã được thay đổi</div>
                                 <div class="code">${password}</div>
                             </div>
-                        `}
+                        ` : ''}
                         
-                        <!-- Verification Code -->
-                        ${rolePassword && `
+                        <!-- Role Password -->
+                        ${rolePassword ? `
                             <div class="verification-code">
                                 <div class="code-label">Tài khoản của anh/chị đã được tạo thành công. Mật khẩu để đăng nhập tài khoản nhân viên công ty Rynan Smart Agriculture. Anh/chị có thể cập nhật mật khẩu mới trên hệ thống</div>
                                 <div class="code">${rolePassword}</div>
                             </div>
-                        `}
+                        ` : ''}
                         
                         <!-- Verify Button -->
-                        ${url && `
-                        <>
+                        ${url ? `
                             <div class="button-container">
                                 <a href="${url}" class="verify-button">Xác Thực Ngay</a>
                             </div>
@@ -255,9 +253,8 @@ const templateMailAuth = ({title, name, type, url, password, rolePassword}) => {
                                 Nếu bạn gặp khó khăn khi nhấp vào nút xác thực, vui lòng sao chép và dán liên kết sau vào trình duyệt của bạn:<br>
                                 <strong>${url}</strong>
                             </div>
-                        </>
-                        `
-                        }
+                        ` : ''}
+                        
                         <div class="description">
                             Nếu bạn có bất kỳ câu hỏi nào, đừng ngần ngại liên hệ với đội ngũ hỗ trợ của chúng tôi.
                         </div>
@@ -265,8 +262,8 @@ const templateMailAuth = ({title, name, type, url, password, rolePassword}) => {
                     
                     <!-- Footer -->
                     <div class="footer">
-                        <p><strong>Rynan Smart Agicuture</strong></p>
-                        <p>Khu CN Long Đức, xã Long Đức, Thành Phố Trà Vinh, tỉnh Trà Vinh</p>
+                        <p><strong>Rynan Smart Agriculture</strong></p>
+                        <p>Khu CN Long Đức, phường Long Đức, tỉnh Vĩnh Long</p>
                         <p>Email: <a href="mailto:info@rynan.vn">info@rynan.vn</a></p>
                         <p>Điện thoại: +84 2943 746 991</p>
                         
@@ -277,14 +274,13 @@ const templateMailAuth = ({title, name, type, url, password, rolePassword}) => {
                         </div>
                         
                         <p style="margin-top: 20px; font-size: 12px; opacity: 0.6;">
-                            © 2025 Rynan Smart Agicuture. Tất cả quyền được bảo lưu.
+                            © 2025 Rynan Smart Agriculture. Tất cả quyền được bảo lưu.
                         </p>
                     </div>
                 </div>
             </body>
             </html>
-            `
+            `;
 }
-
 
 module.exports = {templateMailAuth};
