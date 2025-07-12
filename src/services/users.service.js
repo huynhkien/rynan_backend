@@ -119,7 +119,16 @@ const addRole = asyncHandler(async(data) =>{
     await sendMail({email, html, subject: 'Hoàn tất phân quyền nhân viên'});
     return await User.create(req.body);
 });
-       
+// Check mail
+const checkMail = asyncHandler(async (email) => {
+    if (!email) throw new Error('Email không hợp lệ');
+
+    const response = await axios.get(`https://emailvalidation.abstractapi.com/v1/?api_key=${config.abstract_api_key.key}&email=${email}`);
+    
+    const isValid = response.data.deliverability === 'DELIVERABLE';
+
+    return isValid;
+});    
 module.exports = {
     register,
     addRole,
@@ -135,5 +144,6 @@ module.exports = {
     updateInfoByAdmin,
     updateAddress,
     addUserByAdmin,
-    deleteUser
+    deleteUser,
+    checkMail
 }
