@@ -27,9 +27,9 @@ const ProductSchema = new mongoose.Schema({
         {
             star: {type: Number},
             postedBy: {type: String},
-            postedByName: {type: String},
             comment: {type: String},
-            like: {type: String},
+            like: [{uid: {type: mongoose.Types.ObjectId, ref: 'User'}}],
+            createdAt: {type: Date, default: Date.now()},
             replies: [{
                 replier: {type: String},
                 replierName: {type: String},
