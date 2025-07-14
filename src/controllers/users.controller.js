@@ -152,7 +152,7 @@ const findAllUser = asyncHandler(async(req, res) => {
 })
 // Cập nhật thông tin người dùng
 const updateInfoByUser = asyncHandler(async(req, res) => {
-    const {_id} = req.user;
+    const {uid} = req.params;
     const avatar = req.file ? req.file.path : null;
     if(avatar) req.body.avatar = {
         url: req.file.path,
@@ -165,22 +165,21 @@ const updateInfoByUser = asyncHandler(async(req, res) => {
     }else{
         delete req.body.password;
     }
-    const response = await UserService.updateInfoByUser(_id, req.body);
+    const response = await UserService.updateInfoByUser(uid, req.body);
     if(!response){
         return res.status(400).json({
             success: false,
-            message: 'Cập nhật thông tin thất bại'
+            message: 'Cập nhật thông tin thất bại',
         })
     }
     return res.status(200).json({
         success: true,
-        message: 'Cập nhật thông tin thành công'
+        message: 'Cập nhật thông tin thành công',
+        data: req.body
     })
 })
 const updateInfoByAdmin = asyncHandler(async(req, res) => {
     const {uid} = req.params;
-    console.log(uid);
-    console.log(req.body)
     if(req.body?.password){
         const salt = bcrypt.genSaltSync(15);
         req.body.password = await bcrypt.hash(req.body.password, salt);

@@ -211,7 +211,37 @@ const addAndUpdatePriceProduct = asyncHandler(async(req, res) => {
             message: 'Cập nhật giá tiền thành công'
     });
 });
-
+// Đánh giá sản phẩm: Thêm + xóa đánh giá
+const addRating = asyncHandler(async(req, res) => {
+    const response = await ProductService.addRating(req.body);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Thêm đánh giá thất bại'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Thêm đánh giá thành công'
+    });
+});
+const deleteRating = asyncHandler(async(req, res) => {
+    const {pid, rid} = req.params;
+    if(!pid && rid){
+        throw new Error('Không tìm thấy thông tin về đánh giá');
+    }
+    const response = await ProductService.deleteRating(pid, rid);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Xóa đánh giá thất bại'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Xóa đánh giá thành công'
+    });
+})
 module.exports = {
     addProduct,
     updateProduct,
@@ -223,5 +253,7 @@ module.exports = {
     addPriceProduct,
     updatePriceProduct,
     deletePriceProduct,
-    addAndUpdatePriceProduct
+    addAndUpdatePriceProduct,
+    addRating, 
+    deleteRating
 }
