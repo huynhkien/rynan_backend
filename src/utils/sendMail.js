@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 const asyncHandler = require('express-async-handler');
-const config = require('../config/config')''
+const config = require('../config/config');
 // Hàm validate email
 const isValidEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
