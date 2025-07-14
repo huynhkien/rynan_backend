@@ -32,9 +32,9 @@ const ProductSchema = new mongoose.Schema({
             createdAt: {type: Date, default: Date.now()},
             replies: [{
                 replier: {type: String},
-                replierName: {type: String},
                 feedBack: {type: String},
                 createdAt: {type: Date, default: Date.now()},
+                like: [{uid: {type: mongoose.Types.ObjectId, ref: 'User'}}],
                 postedBy: {type: String}
             }]
         }
