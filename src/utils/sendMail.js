@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 const asyncHandler = require('express-async-handler');
-
+const config = require('../config/config')''
 // Hàm validate email
 const isValidEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -38,18 +38,14 @@ const sendMail = asyncHandler(async({email, html, subject}) => {
     port: 587,
     secure: false, 
     auth: {
-      user: process.env.EMAIL_NAME,
-      pass: process.env.EMAIL_APP_PASSWORD,
+      user: config.email_name.value,
+      pass: config.email_app_password.password,
     },
   });
-  console.log('Email credentials check:', {
-    user: process.env.EMAIL_NAME,
-    pass: process.env.EMAIL_APP_PASSWORD ? 'Set' : 'Not set'
-  });
-
+ 
   const info = await transporter.sendMail({
     from: '"Rynan Smart Agriculture" <info@rynan.vn>', 
-    to: normalizedEmail, // Sử dụng email đã được normalize
+    to: normalizedEmail, 
     subject: subject,
     html: html
   });
