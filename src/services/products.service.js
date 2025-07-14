@@ -127,6 +127,47 @@ const addAndUpdatePriceProduct = asyncHandler(async (pid, data) => {
     const savedProduct = await product.save();
     return savedProduct;
 });
+// Đánh giá sản phẩm: Thêm đánh giá + Xóa đánh giá
+const addRating = asyncHandler(async(data) => {
+    if(!data) throw new Error('Thiếu thông tin!');
+    console.log(data);
+    await Product.findByIdAndUpdate(data.pid, {
+        $push:  {ratings: {
+                    star: data.star, 
+                    comment: data.comment,
+                    postedBy: data.uid, 
+                },
+        }}, {new: true} );
+    // Tính toán lại đánh giá
+    const product = await Product.findById(data.pid);
+    console.log(product);
+    const ratingCount = product.ratings.length;
+    const sumRatings = product.ratings.reduce((sum, item) => sum + +item.star, 0);
+    console.log("1",ratingCount);
+    console.log("2",sumRatings);
+    product.totalRatings = sumRatings / ratingCount ;
+    return product.save();
+})
+
+const deleteRating = asyncHandler(async (pid, rid) => {
+    const product = await Product.findById(pid);
+    if (!product) {
+        throw new Error('Không tìm thấy sản phẩm');
+    }
+    // Tìm đánh giá
+    const ratingIndex = product.ratings.findIndex(el => el._id.toString() === rid);
+    if (ratingIndex === -1) {
+        throw new Error('Không tìm thấy đánh giá')
+    }
+    // Xóa đánh giá
+    product.ratings.splice(ratingIndex, 1);
+    // Tính toán lại đánh giá
+    const ratingCount = product.ratings.length;
+    const sumRatings = product.ratings.reduce((sum, el) => sum + +el.star, 0);
+    product.totalRatings = ratingCount > 0 ? sumRatings/ratingCount : 0; 
+    return product.save();
+});
+
 module.exports = {
     addProduct,
     updateProduct,
@@ -139,5 +180,7 @@ module.exports = {
     AddPriceProduct,
     updatePriceProduct,
     deletePriceProduct,
-    addAndUpdatePriceProduct
+    addAndUpdatePriceProduct,
+    addRating,
+    deleteRating
 }

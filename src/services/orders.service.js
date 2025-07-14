@@ -1,5 +1,6 @@
 const Order = require('../models/order.model');
 const Inventory = require('../models/inventory.model');
+const Product = require('../models/product.model');
 const asyncHandler = require('express-async-handler');
 
 // Tạo đơn hàng
@@ -73,6 +74,10 @@ const updateOrder = asyncHandler(async(id, data) => {
                     },
                     { new: true }
                 );
+                await Product.findByIdAndUpdate(
+                    item.pid,
+                    {$inc: {sold: item.quantity}}
+                )
             }
         }
     }

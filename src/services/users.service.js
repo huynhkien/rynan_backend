@@ -10,7 +10,7 @@ const { generateAccessToken, generateRefreshToken } = require('../middlewares/au
 
 // Xác thực tài khoản 
 const register = asyncHandler(async(data, res) => {
-    if(!(data?.name && data?.password && data?.phone && data?.email)) throw new Error('Vui lòng điền đầy đủ các thông tin cần thiết.');
+    if(!(data?.name && data?.password && data?.phone && data?.email && data.code)) throw new Error('Vui lòng điền đầy đủ các thông tin cần thiết.');
     // Kiểm tra email đã tồn tại trong hệ thống hay chưa
     const existingEmail = await User.findOne({email: data?.email});
     if(existingEmail) throw new Error('Email đã tồn tại. Vui lòng chọn email khác để đăng ký tài khoản');
@@ -26,6 +26,7 @@ const finalRegister = asyncHandler(async(cookie) => {
         password: cookie?.cookieRegister?.password,
         name: cookie?.cookieRegister?.name,
         phone: cookie?.cookieRegister?.phone,
+        code: cookie?.cookieRegister?.code,
     })
 });
 // Tìm kiếm người dùng theo _id
