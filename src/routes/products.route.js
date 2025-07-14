@@ -13,8 +13,13 @@ router.route('/:pid')
             .get(productsController.findProductById)
             .put(uploader.single('thumb'), productsController.updateProduct)
             .delete(productsController.deleteProduct);
+
+router.route('/add-reply/:pid/:rid').put(productsController.addReply);
+router.route('/add-reply-child/:pid/:cid').put(productsController.addReplyChild);
+            
 router.route('/update-description/:pid').put(productsController.updateDescriptionProduct);
 router.route('/add-price/:pid').put(productsController.addPriceProduct);
+
 router.route('/update-price/:pid/:rid').put(productsController.updatePriceProduct);
 router.route('/add-update-price/:pid').put(productsController.addAndUpdatePriceProduct);
 router.route('/delete-rating/:pid/:rid').delete(productsController.deleteRating);
