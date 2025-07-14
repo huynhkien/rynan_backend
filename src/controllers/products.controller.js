@@ -241,7 +241,37 @@ const deleteRating = asyncHandler(async(req, res) => {
         success: true,
         message: 'Xóa đánh giá thành công'
     });
-})
+});
+// Phản hồi
+const addReply = asyncHandler(async(req, res) => {
+    const {pid, rid} = req.params;
+    const response = await ProductService.addRating({
+        pid: pid, rid: rid, data: req.body});
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Thêm phản hồi thất bại'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Thêm phản hồi thành công'
+    });
+});
+const addReplyChild = asyncHandler(async(req, res) => {
+    const {pid, cid} = req.params;
+    const response = await ProductService.addReplyChild(pid, cid, req.body);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Thêm phản hồi thất bại'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Thêm phản hồi thành công'
+    });
+});
 module.exports = {
     addProduct,
     updateProduct,
@@ -255,5 +285,7 @@ module.exports = {
     deletePriceProduct,
     addAndUpdatePriceProduct,
     addRating, 
-    deleteRating
+    deleteRating,
+    addReply,
+    addReplyChild
 }
