@@ -143,8 +143,6 @@ const addRating = asyncHandler(async(data) => {
     console.log(product);
     const ratingCount = product.ratings.length;
     const sumRatings = product.ratings.reduce((sum, item) => sum + +item.star, 0);
-    console.log("1",ratingCount);
-    console.log("2",sumRatings);
     product.totalRatings = sumRatings / ratingCount ;
     return product.save();
 })
@@ -167,7 +165,37 @@ const deleteRating = asyncHandler(async (pid, rid) => {
     product.totalRatings = ratingCount > 0 ? sumRatings/ratingCount : 0; 
     return product.save();
 });
-
+// Phản hồi
+const addReply = asyncHandler( async (pid, rid, data) => {
+    if(!pid || !rid) throw new Error('Thiếu thông tin sản phẩm');
+    if(!data) throw new Error('Vui lòng thêm thông tin');
+    return await Product.findOneAndUpdate(
+        { _id: pid, 'ratings._id': rid },
+        {
+            $push: {
+            'ratings.$.replies': {
+                replier: data.replier,
+                feedBack: data.feedBack,
+                postedBy: data.postedBy, 
+            }}
+        },
+        { new: true } 
+        );
+});
+const addReplyChild = asyncHandler(async (pid, cid, data) => {
+  return await Product.findOneAndUpdate(
+    { _id: pid, 'ratings.replies._id': cid }, 
+    {
+      $push: {
+        'ratings.$.replies': {
+            replier: data.replier,
+            feedBack: data.feedBack,
+            postedBy: data.postedBy, 
+        },
+      },
+    },
+    { new: true });
+});
 module.exports = {
     addProduct,
     updateProduct,
@@ -182,5 +210,7 @@ module.exports = {
     deletePriceProduct,
     addAndUpdatePriceProduct,
     addRating,
-    deleteRating
+    deleteRating,
+    addReply, 
+    addReplyChild
 }
