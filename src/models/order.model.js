@@ -10,6 +10,12 @@ const OrderSchema = new mongoose.Schema({
         thumb: {type: String},
         priceType: {type: String}
     }],
+    orderType: {
+        type: String,
+        enum: ['STAFF_CREATED', 'CUSTOMER_ONLINE'],
+        default: 'CUSTOMER_ONLINE',
+        required: true
+    },
     status: {
         type: String,
         enum: ['Cancelled', 'Processing', 'Delivering', 'Received' ,'Succeed'],
