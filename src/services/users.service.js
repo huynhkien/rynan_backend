@@ -49,6 +49,12 @@ const login = asyncHandler(async({email, password, res}) => {
     const accessToken = generateAccessToken(user?._id, user?.role);
     const newRefreshToken = generateRefreshToken(user?._id);
     res.cookie('refreshToken', newRefreshToken, {httpOnly: true, maxAge: 7 * 24 * 60 *60 * 1000});
+    res.cookie('accessToken', accessToken, {httpOnly: true, maxAge: 60 * 60 * 1000 });
+    await User.findByIdAndUpdate(
+        user?._id,
+        {refreshToken: newRefreshToken},
+        {new: true}
+    );
     // Kiểm tra tra tra tài khoản đã bị khóa chưa
     if(user.isBlocked) throw new Error('Tài khoản đã bị khóa. Vui lòng liên hệ admin để mới khóa tài khoản');
     user.lastLoginAt = Date.now();
@@ -57,16 +63,16 @@ const login = asyncHandler(async({email, password, res}) => {
         user
     }
 })
-const updateRefreshToken = asyncHandler(async(id, refreshToken) => {
-    return await User.findByIdAndUpdate(
-        id,
-        {refreshToken},
-        {new: true}
-    );
-});
 // Đăng xuất tài khoản
-const logout = asyncHandler(async(cookie) => {
-    return await User.findOneAndUpdate({refreshToken: cookie.refreshToken}, {refreshToken: ''}, {new: true});
+const logout = asyncHandler(async(res, cookie) => {
+    const response = await User.findOneAndUpdate({refreshToken: cookie.refreshToken}, {refreshToken: ''}, {new: true});
+    if(response){
+        res.clearCookie('accessToken', {httpOnly: true, secure: true});
+        res.clearCookie('refreshToken', {httpOnly: true, secure: true});
+    }else{
+        throw new Error('Lỗi cập nhật')
+    }
+    return response;
 })
 // Quên mật khẩu
 const forgotPassword = asyncHandler(async(email) => {
@@ -156,7 +162,6 @@ module.exports = {
     findUserById,
     findAllUser,
     login,
-    updateRefreshToken,
     logout,
     forgotPassword,
     resetPassword,
