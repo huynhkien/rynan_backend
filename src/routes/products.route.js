@@ -8,14 +8,16 @@ const uploader = require('../config/connectCloudinary');
 router.route('/')
             .post(uploader.single('thumb'), productsController.addProduct)
             .get(productsController.findAllProduct);
+
 router.route('/add-rating/').put(productsController.addRating);
 router.route('/:pid')
             .get(productsController.findProductById)
             .put(uploader.single('thumb'), productsController.updateProduct)
             .delete(productsController.deleteProduct);
 
-router.route('/add-reply/:pid/:rid').put(productsController.addReply);
-router.route('/add-reply-child/:pid/:cid').put(productsController.addReplyChild);
+
+router.route('/add-reply/:pid/:rid').post(productsController.addReply);
+router.route('/add-reply-child/:pid/:cid').post(productsController.addReplyChild);
             
 router.route('/update-description/:pid').put(productsController.updateDescriptionProduct);
 router.route('/add-price/:pid').put(productsController.addPriceProduct);
@@ -24,5 +26,6 @@ router.route('/update-price/:pid/:rid').put(productsController.updatePriceProduc
 router.route('/add-update-price/:pid').put(productsController.addAndUpdatePriceProduct);
 router.route('/delete-rating/:pid/:rid').delete(productsController.deleteRating);
 router.route('/detail/:slug').get(productsController.findProductBySlug);
+router.route('/delete-reply/:pid/:rid/:repId').delete(productsController.deleteReply);
 
 module.exports = router;
