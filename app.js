@@ -18,6 +18,7 @@ const receiptRouter = require('./src/routes/receipts.route');
 const inventoryRouter = require('./src/routes/inventories.route');
 const materialRouter = require('./src/routes/materials.route');
 const supplierRouter = require('./src/routes/suppliers.route');
+const contactRouter = require('./src/routes/contacts.route');
 
 // Ngăn chặn injection NoSQL
 app.use((req, res, next) => {
@@ -93,6 +94,7 @@ app.use('/api/receipt', receiptRouter);
 app.use('/api/inventory', inventoryRouter); 
 app.use('/api/material', materialRouter); 
 app.use('/api/supplier', supplierRouter); 
+app.use('/api/contact', contactRouter); 
 // Bắt các route không khớp, trả về lỗi 404
 app.use(notFound)
 // Xử lý lỗi
