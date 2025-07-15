@@ -100,8 +100,13 @@ const login = asyncHandler(async(req, res) => {
 const logout = asyncHandler(async(req, res) => {
     const cookie = req.cookies;
     if(!cookie || !cookie.refreshToken) throw new Error('Không có refreshToken. Vui lòng kiểm tra hệ thống!!!');
-    await UserService.logout(cookie);
-    res.clearCookie('refreshToken', {httpOnly: true, secure: true});
+    const response = await UserService.logout(res, cookie);
+    if(!response){
+        return res.status(400).json({
+            success: false, 
+            message: 'Đăng xuất không thành công.'
+        });
+    }
     return res.status(200).json({
         success: true, 
         message: 'Đăng xuất thành công.'
