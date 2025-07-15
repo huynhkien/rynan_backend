@@ -227,6 +227,7 @@ const addRating = asyncHandler(async(req, res) => {
 });
 const deleteRating = asyncHandler(async(req, res) => {
     const {pid, rid} = req.params;
+    
     if(!pid && rid){
         throw new Error('Không tìm thấy thông tin về đánh giá');
     }
@@ -245,7 +246,8 @@ const deleteRating = asyncHandler(async(req, res) => {
 // Phản hồi
 const addReply = asyncHandler(async(req, res) => {
     const {pid, rid} = req.params;
-    const response = await ProductService.addRating({
+   
+    const response = await ProductService.addReply({
         pid: pid, rid: rid, data: req.body});
     if(!response){
         return res.status(400).json({
@@ -272,6 +274,22 @@ const addReplyChild = asyncHandler(async(req, res) => {
         message: 'Thêm phản hồi thành công'
     });
 });
+// Xóa phản hồ
+const deleteReply = asyncHandler(async(req, res) => {
+    const {pid, rid, repId} = req.params;
+    if(!pid || !rid || !repId) throw new Error('Không tìm thấy thông tin về phản hồi');
+    const response = await ProductService.deleteReply(pid, rid, repId);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Xóa phản hồi thất bại'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Xóa phản hồi thành công'
+    });
+})
 module.exports = {
     addProduct,
     updateProduct,
@@ -287,5 +305,6 @@ module.exports = {
     addRating, 
     deleteRating,
     addReply,
-    addReplyChild
+    addReplyChild,
+    deleteReply
 }
