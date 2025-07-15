@@ -5,6 +5,8 @@ const router = express.Router();
 const uploader = require('../config/connectCloudinary');
 
 router.route('/').get(usersController.findAllUser);
+router.route('/logout').get(usersController.logout);
+
 router.route('/register').post(usersController.register);
 router.route('/final-register/:token').get(usersController.finalRegister);
 
@@ -17,7 +19,6 @@ router.route('/:uid')
 router.route('/find-user').get(usersController.findUserByToken);
 
 router.route('/login').post(usersController.login);
-router.route('/logout').get(usersController.logout);
 
 router.route('/forgot-password').get(usersController.forgotPassword);
 router.route('/reset-password').put(usersController.resetPassword);
