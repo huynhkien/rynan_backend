@@ -166,24 +166,26 @@ const deleteRating = asyncHandler(async (pid, rid) => {
     return product.save();
 });
 // Phản hồi
-const addReply = asyncHandler( async (pid, rid, data) => {
-    if(!pid || !rid) throw new Error('Thiếu thông tin sản phẩm');
-    if(!data) throw new Error('Vui lòng thêm thông tin');
-    return await Product.findOneAndUpdate(
-        { _id: pid, 'ratings._id': rid },
-        {
-            $push: {
-            'ratings.$.replies': {
-                replier: data.replier,
-                feedBack: data.feedBack,
-                postedBy: data.postedBy, 
-            }}
-        },
-        { new: true } 
-        );
+const addReply = asyncHandler(async ({pid, rid, data}) => {
+    if(!pid || !rid || !data) throw new Error('Thiếu thông tin sản phẩm');
+    const product = await Product.findById(pid);
+    if(!product) throw new Error('Không tìm thấy sản phẩm');
+    
+    const rating = product.ratings.find(el => el._id.toString() === rid);
+    if(!rating) throw new Error('Không tìm thấy đánh giá');
+    
+    rating.replies.push({
+        replier: data.replier,
+        feedBack: data.feedBack, 
+        postedBy: data.postedBy
+    });
+    const response = await product.save();
+    return response;
 });
 const addReplyChild = asyncHandler(async (pid, cid, data) => {
-  return await Product.findOneAndUpdate(
+    console.log(pid, cid)
+    console.log(data)
+  const response = await Product.findOneAndUpdate(
     { _id: pid, 'ratings.replies._id': cid }, 
     {
       $push: {
@@ -195,6 +197,23 @@ const addReplyChild = asyncHandler(async (pid, cid, data) => {
       },
     },
     { new: true });
+    if(!response) throw new Error('Không tìm thấy thông tin');
+    return response;
+});
+// Xóa phản hồi
+const deleteReply = asyncHandler(async (pid, rid, repId) => {
+    const response = await Product.findOneAndUpdate(
+      { _id: pid, 'ratings._id': rid },
+      {
+        $pull: { 'ratings.$.replies': { _id: repId } }
+      },
+      { new: true } 
+    );
+
+    if (!response) {
+      throw new Error('Không tìm thấy phản hồi để xóa');
+    }
+    return response;
 });
 module.exports = {
     addProduct,
@@ -212,5 +231,6 @@ module.exports = {
     addRating,
     deleteRating,
     addReply, 
-    addReplyChild
+    addReplyChild,
+    deleteReply
 }
