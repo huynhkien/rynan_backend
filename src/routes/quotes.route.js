@@ -5,13 +5,13 @@ const router = express.Router();
 
 
 router.route('/')
-            .post(quotesController.addQuote)
-            .get(quotesController.findAllQuote);
+            .post([verifyAccessToken, checkUserPermission],quotesController.addQuote)
+            .get([verifyAccessToken, checkUserPermission],quotesController.findAllQuote);
 router.route('/:qid')
-            .get(quotesController.findQuoteById)
-            .put(quotesController.updateQuote)
-            .delete(quotesController.deleteQuote);
+            .get([verifyAccessToken, checkUserPermission],quotesController.findQuoteById)
+            .put([verifyAccessToken, checkUserPermission],quotesController.updateQuote)
+            .delete([verifyAccessToken, checkUserPermission],quotesController.deleteQuote);
 router.route('/delete-product-quote/:qid/:pid')
-            .delete(quotesController.deleteProductQuote)
+            .delete([verifyAccessToken, checkUserPermission],quotesController.deleteProductQuote)
 
 module.exports = router;

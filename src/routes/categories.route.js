@@ -6,12 +6,12 @@ const uploader = require('../config/connectCloudinary');
 
 
 router.route('/')
-            .post(uploader.single('thumb'), categoriesController.addCategory)
+            .post([verifyAccessToken, checkUserPermission],uploader.single('thumb'), categoriesController.addCategory)
             .get(categoriesController.findAllCategory);
 router.route('/:cid')
-            .get(categoriesController.findCategoryById)
-            .put(categoriesController.updateCategory)
-            .delete(categoriesController.deleteCategory);
+            .get([verifyAccessToken, checkUserPermission], categoriesController.findCategoryById)
+            .put([verifyAccessToken, checkUserPermission],uploader.single('thumb'), categoriesController.updateCategory)
+            .delete([verifyAccessToken, checkUserPermission], categoriesController.deleteCategory);
 
 router.route('/slug/:slug').get(categoriesController.findCategoryBySlug);
 

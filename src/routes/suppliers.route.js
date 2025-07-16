@@ -1,14 +1,15 @@
 const suppliersController = require('../controllers/suppliers.controller');
 const express = require('express');
 const router = express.Router();
+const {verifyAccessToken, checkUserPermission} = require('../middlewares/auth');
 
 
 router.route('/')
-            .post(suppliersController.addSupplier)
-            .get(suppliersController.findAllSupplier);
+            .post([verifyAccessToken, checkUserPermission],suppliersController.addSupplier)
+            .get([verifyAccessToken, checkUserPermission],suppliersController.findAllSupplier);
 router.route('/:sid')
-            .get(suppliersController.findSupplierById)
-            .put(suppliersController.updateSupplier)
-            .delete(suppliersController.deleteSupplier);
+            .get([verifyAccessToken, checkUserPermission],suppliersController.findSupplierById)
+            .put([verifyAccessToken, checkUserPermission],suppliersController.updateSupplier)
+            .delete([verifyAccessToken, checkUserPermission],suppliersController.deleteSupplier);
 
 module.exports = router;

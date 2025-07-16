@@ -1,14 +1,15 @@
 const materialsController = require('../controllers/materials.controller');
 const express = require('express');
+const {verifyAccessToken, checkUserPermission} = require('../middlewares/auth');
 const router = express.Router();
 
 
 router.route('/')
-            .post(materialsController.addMaterial)
-            .get(materialsController.findAllMaterial);
+            .post([verifyAccessToken, checkUserPermission], materialsController.addMaterial)
+            .get([verifyAccessToken, checkUserPermission], materialsController.findAllMaterial);
 router.route('/:mid')
-            .get(materialsController.findMaterialById)
-            .put(materialsController.updateMaterial)
-            .delete(materialsController.deleteMaterial);
+            .get([verifyAccessToken, checkUserPermission], materialsController.findMaterialById)
+            .put([verifyAccessToken, checkUserPermission], materialsController.updateMaterial)
+            .delete([verifyAccessToken, checkUserPermission], materialsController.deleteMaterial);
 
 module.exports = router;

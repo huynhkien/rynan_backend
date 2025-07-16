@@ -10,9 +10,12 @@ router.route('/')
 
 
 router.route('/:oid')
-            .put(OrderController.updateOrder)
+            .put([verifyAccessToken, checkUserPermission],OrderController.updateOrder)
             .get(OrderController.findOrderById);
-router.route('/delete-product-order/:oid/:pid').delete(OrderController.deleteProductOrder)
-router.route('/update-product-order/:oid/:pid').put(OrderController.updateProductOrder)
+            
+router.route('/update-status-by-admin/:oid').put([verifyAccessToken, checkUserPermission], OrderController.updateStatusOrderByAdmin)
+router.route('/update-status-by-user/:oid').put(verifyAccessToken, OrderController.updateStatusOrderByUser)
+router.route('/delete-product-order/:oid/:pid').delete([verifyAccessToken, checkUserPermission], OrderController.deleteProductOrder)
+router.route('/update-product-order/:oid/:pid').put([verifyAccessToken, checkUserPermission],OrderController.updateProductOrder)
 
 module.exports = router;

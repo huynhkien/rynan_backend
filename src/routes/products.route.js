@@ -6,26 +6,26 @@ const uploader = require('../config/connectCloudinary');
 
 
 router.route('/')
-            .post(uploader.single('thumb'), productsController.addProduct)
+            .post([verifyAccessToken, checkUserPermission],uploader.single('thumb'), productsController.addProduct)
             .get(productsController.findAllProduct);
 
 router.route('/add-rating/').put(productsController.addRating);
 router.route('/:pid')
             .get(productsController.findProductById)
-            .put(uploader.single('thumb'), productsController.updateProduct)
-            .delete(productsController.deleteProduct);
+            .put([verifyAccessToken, checkUserPermission],uploader.single('thumb'), productsController.updateProduct)
+            .delete([verifyAccessToken, checkUserPermission],productsController.deleteProduct);
 
 
 router.route('/add-reply/:pid/:rid').post(productsController.addReply);
 router.route('/add-reply-child/:pid/:cid').post(productsController.addReplyChild);
             
-router.route('/update-description/:pid').put(productsController.updateDescriptionProduct);
-router.route('/add-price/:pid').put(productsController.addPriceProduct);
+router.route('/update-description/:pid').put([verifyAccessToken, checkUserPermission],productsController.updateDescriptionProduct);
+router.route('/add-price/:pid').put([verifyAccessToken, checkUserPermission],productsController.addPriceProduct);
 
-router.route('/update-price/:pid/:rid').put(productsController.updatePriceProduct);
-router.route('/add-update-price/:pid').put(productsController.addAndUpdatePriceProduct);
-router.route('/delete-rating/:pid/:rid').delete(productsController.deleteRating);
+router.route('/update-price/:pid/:rid').put([verifyAccessToken, checkUserPermission],productsController.updatePriceProduct);
+router.route('/add-update-price/:pid').put([verifyAccessToken, checkUserPermission],productsController.addAndUpdatePriceProduct);
+router.route('/delete-rating/:pid/:rid').delete([verifyAccessToken, checkUserPermission],productsController.deleteRating);
 router.route('/detail/:slug').get(productsController.findProductBySlug);
-router.route('/delete-reply/:pid/:rid/:repId').delete(productsController.deleteReply);
+router.route('/delete-reply/:pid/:rid/:repId').delete([verifyAccessToken, checkUserPermission],productsController.deleteReply);
 
 module.exports = router;

@@ -5,11 +5,11 @@ const router = express.Router();
 
 
 router.route('/')
-            .post(specificationsController.addSpecification)
-            .get(specificationsController.findAllSpecification);
+            .post([verifyAccessToken, checkUserPermission],specificationsController.addSpecification)
+            .get([verifyAccessToken, checkUserPermission],specificationsController.findAllSpecification);
 router.route('/:sid')
-            .get(specificationsController.findSpecificationById)
-            .put(specificationsController.updateSpecification)
-            .delete(specificationsController.deleteSpecification);
+            .get([verifyAccessToken, checkUserPermission],specificationsController.findSpecificationById)
+            .put([verifyAccessToken, checkUserPermission],specificationsController.updateSpecification)
+            .delete([verifyAccessToken, checkUserPermission],specificationsController.deleteSpecification);
 
 module.exports = router;
