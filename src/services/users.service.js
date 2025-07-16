@@ -49,7 +49,7 @@ const login = asyncHandler(async({email, password, res}) => {
     const accessToken = generateAccessToken(user?._id, user?.role);
     const newRefreshToken = generateRefreshToken(user?._id);
     res.cookie('refreshToken', newRefreshToken, {httpOnly: true, maxAge: 7 * 24 * 60 *60 * 1000});
-    res.cookie('accessToken', accessToken, {httpOnly: true, maxAge: 60 * 60 * 1000 });
+    res.cookie('accessToken', accessToken, {httpOnly: true, maxAge: 7 * 24 * 60 *60 * 1000 });
     await User.findByIdAndUpdate(
         user?._id,
         {refreshToken: newRefreshToken},
@@ -76,16 +76,17 @@ const logout = asyncHandler(async(res, cookie) => {
 })
 // Quên mật khẩu
 const forgotPassword = asyncHandler(async(email) => {
-    const user = User.findOne({email});
+    if(!email) throw new Error('Không tìm thất email');
+    const user = await User.findOne({email});
     if(!user) throw new Error('Không tìm thấy thông tin người dùng.');
     const resetToken = user.createPasswordChangeToken();
-    await user.save();
-    const html = templateMailAuth({title: 'Quên mật khẩu', name: data?.name, type: 'forgotPassword', url: `${process.env.URL_CLIENT}/forgot-password/${resetToken}`});
-    return await sendMail({email, html, subject: 'Quên mật khẩu'});
+    const html = templateMailAuth({title: 'Quên mật khẩu', name: user?.name, type: 'forgotPassword', url: `${process.env.URL_CLIENT}/reset-password/${resetToken}`});
+    await sendMail({email, html, subject: 'Quên mật khẩu'});
+    return await user.save();
 })
 const resetPassword = asyncHandler(async(password, token) => {
     const passwordResetToken = crypto.createHash('sha256').update(token).digest('hex');
-    const user = await User.findOne({passwordResetToken, passwordResetExpires: {$gt: Date.now() + 15*60*1000}});
+    const user = await User.findOne({passwordResetToken, passwordResetExpires:{$gt: Date.now()}});
     if(!user) throw new Error('Không tìm thấy thông tin người dùng');
     user.password = password;
     user.passwordResetToken = undefined;
@@ -155,6 +156,25 @@ const checkMail = asyncHandler(async (email) => {
 
     return isValid;
 });    
+// Thêm sản phẩm vào danh sách yêu thích
+const addFavorite = asyncHandler(async (uid, pid) => {
+    const user = User.findById(uid);
+    if(!user) throw new Error('Không tìm thấy thông tin người dùng')
+    const alreadyInWishList = user.wishlist?.includes(pid);
+    if (alreadyInWishList) {
+        return await User.findByIdAndUpdate(
+            uid,
+            { $pull: { wishlist: pid } },
+            { new: true }
+        );
+    } else {
+        return await User.findByIdAndUpdate(
+            uid,
+            { $push: { wishlist: pid } },
+            { new: true }
+        );
+    }
+});
 module.exports = {
     register,
     addRole,
@@ -170,5 +190,6 @@ module.exports = {
     updateAddress,
     addUserByAdmin,
     deleteUser,
-    checkMail
+    checkMail,
+    addFavorite
 }
