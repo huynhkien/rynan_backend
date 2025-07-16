@@ -11,23 +11,34 @@ const generateRefreshToken = (uid) => {
 }
 // Xác thực accessToken
 const verifyAccessToken = asyncHandler(async(req, res, next) => {
-    // Kiểm tra header Authorization có bắt đầu bằng Bearer không?
-    if(req?.header?.authorization?.startsWith('Bearer')) {
-        const token = req.header.authorization.split(' ')[1];
+    const authHeader = req.headers?.authorization || req.headers?.Authorization;
+    
+    if(authHeader && authHeader.startsWith('Bearer ')) {
+        const token = authHeader.split(' ')[1];
+        
+        // Kiểm tra token có tồn tại không
+        if(!token) {
+            return res.status(401).json({
+                success: false,
+                message: 'Token không tồn tại'
+            });
+        }
         jwt.verify(token, process.env.JWT_SECRET, (error, decode) => {
             if(error) {
+                console.log('JWT Error:', error.message); 
                 return res.status(401).json({
                     success: false,
-                    message: 'AccessToken không hợp lệ'
+                    message: 'AccessToken không hợp lệ',
+                    error: error.message
                 });
             }
             req.user = decode;
             next();
         });
-    }else{
+    } else {
         return res.status(401).json({
             success: false,
-            message: 'Yêu cầu xác thực'
+            message: 'Yêu cầu xác thực - Missing Bearer token'
         });
     }
 });
@@ -42,13 +53,7 @@ const checkUserPermission = asyncHandler(async(req, res, next) => {
         });
     }
     next();
-
-
 })
-
-
-
-
 
 module.exports = {
     generateAccessToken, 
