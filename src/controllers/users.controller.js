@@ -265,6 +265,20 @@ const checkMail = asyncHandler(async(req, res) => {
             success: true,
             message: 'Email tồn tại'
         });
+});
+// THêm sản phẩm vào danh sách yêu thích
+const addFavorite =asyncHandler(async(req, res) => {
+    const response = await UserService.addFavorite(req.body.uid, req.body.pid);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Cập nhật sản phẩm vào danh sách yêu thích không thành công'
+        });
+    }
+    return res.status(200).json({
+            success: true,
+            message: 'Cập nhật sản phẩm vào danh sách yêu thích thành công'
+        });
 })
 module.exports = {
     register,
@@ -282,5 +296,6 @@ module.exports = {
     addUserByAdmin,
     deleteUser,
     addRole,
-    checkMail
+    checkMail,
+    addFavorite
 }

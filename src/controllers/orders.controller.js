@@ -31,6 +31,36 @@ const updateOrder = asyncHandler(async(req, res) => {
     })
 });
 // Cập nhật trạng thái đơn hàng
+const updateStatusOrderByAdmin = asyncHandler(async(req, res) => {
+    const {oid} = req.params;
+    const response = await OrderService.updateStatusOrderByAdmin(oid, req.body);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Cập nhật trạng thái đơn hàng không thành công'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Cập nhật trạng thái đơn hàng thành công'
+    })
+});
+const updateStatusOrderByUser = asyncHandler(async(req, res) => {
+    const {oid} = req.params;
+    console.log(req.body);
+    const response = await OrderService.updateStatusOrderByUser(oid, req.body.status);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Cập nhật trạng thái đơn hàng không thành công'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Cập nhật trạng thái đơn hàng thành công'
+    })
+});
+// Cập nhật trạng thái đơn hàng
 const updateProductOrder = asyncHandler(async(req, res) => {
     const {oid, pid} = req.params;
     const response = await OrderService.updateProductOrder(oid, pid, req.body);
@@ -107,6 +137,8 @@ const deleteProductOrder = asyncHandler(async(req, res) => {
 module.exports = {
     addOrder,
     updateOrder,
+    updateStatusOrderByAdmin,
+    updateStatusOrderByUser,
     findOrderById,
     findAllOrder,
     deleteOrder,
