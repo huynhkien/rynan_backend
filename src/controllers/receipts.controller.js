@@ -1,7 +1,5 @@
 const ReceiptService = require('../services/receipts.service');
-const InventoryService = require('../services/inventories.service');
 const asyncHandler = require('express-async-handler');
-const mongoose = require('mongoose');
 
 
 // Tạo phiếu nhập
@@ -22,8 +20,9 @@ const addImportReceipt = asyncHandler(async (req, res) => {
 
 // Tạo phiếu xuất hàng
 const addExportReceipt = asyncHandler(async(req, res) => {
+    console.log(req.body);
     if (!req.body) throw new Error('Thiếu thông tin phiếu xuất');
-    const response = await ReceiptService.addReceipt(req.body);
+    const response = await ReceiptService.removeReceipt(req.body);
     if(!response){
         return res.status(400).json({
             success: false,
