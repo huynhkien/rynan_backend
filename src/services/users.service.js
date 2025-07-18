@@ -15,7 +15,7 @@ const register = asyncHandler(async(data, res) => {
     const existingEmail = await User.findOne({email: data?.email});
     if(existingEmail) throw new Error('Email đã tồn tại. Vui lòng chọn email khác để đăng ký tài khoản');
     const token = crypto.randomBytes(32).toString('hex');
-    res.cookie('cookieRegister', {...data, token}, {httpOnly: true, maxAge: 15*60*1000});
+    res.cookie('cookieRegister', {...data, token}, {httpOnly: true,secure: true,sameSite: 'none', maxAge: 15*60*1000});
     const html = templateMailAuth({title: 'Xác thực tài khoản', name: data?.name, type: 'register', url: `${process.env.URL_SERVER}/api/user/final-register/${token}`})
     return await sendMail({email: data.email, html, subject: 'Hoàn tất đăng ký tài khoản'});
 })
