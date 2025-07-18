@@ -175,6 +175,15 @@ const addFavorite = asyncHandler(async (uid, pid) => {
         );
     }
 });
+// chatbot
+const chatbot = asyncHandler(async(message) => {
+    if(!message) throw new Error('Vui lòng nhập tin nhắn.');
+    const {data} = await axios.post(`${process.env.RYNAN_AI_URL}/chat`,{
+        message
+    });
+    if(!data) throw new Error('Hiện tại api đang gặp trục trặc');
+    return data.response;
+})
 module.exports = {
     register,
     addRole,
@@ -191,5 +200,6 @@ module.exports = {
     addUserByAdmin,
     deleteUser,
     checkMail,
-    addFavorite
+    addFavorite,
+    chatbot
 }
