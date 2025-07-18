@@ -279,6 +279,20 @@ const addFavorite =asyncHandler(async(req, res) => {
             success: true,
             message: 'Cập nhật sản phẩm vào danh sách yêu thích thành công'
         });
+});
+// Chatbot
+const chatbot = asyncHandler(async(req, res) => {
+    const response = await UserService.chatbot(req.body.message);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            data: 'Lỗi'
+        })
+    }
+    return res.status(200).json({
+            success: true,
+            data: response
+        })
 })
 module.exports = {
     register,
@@ -297,5 +311,6 @@ module.exports = {
     deleteUser,
     addRole,
     checkMail,
-    addFavorite
+    addFavorite,
+    chatbot
 }
