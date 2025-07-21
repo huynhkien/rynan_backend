@@ -177,13 +177,53 @@ const addFavorite = asyncHandler(async (uid, pid) => {
 });
 // chatbot
 const chatbot = asyncHandler(async(message) => {
-    if(!message) throw new Error('Vui lòng nhập tin nhắn.');
-    const {data} = await axios.post(`${process.env.RYNAN_AI_URL}/chat`,{
-        message
-    });
-    if(!data) throw new Error('Hiện tại api đang gặp trục trặc');
-    return data.response;
-})
+    if(!message || typeof message !== 'string' || message.trim() === '') {
+        throw new Error('Vui lòng nhập tin nhắn hợp lệ.');
+    }
+    if(!process.env.RYNAN_AI_URL) {
+        throw new Error('RYNAN_AI_URL không được cấu hình.');
+    }
+    try {
+        const { data } = await axios.post(
+            `${process.env.RYNAN_AI_URL}/chat`,
+            { message: message.trim() },
+            {
+                timeout: 30000,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }
+        );
+
+        if(!data || !data.response) {
+            throw new Error('API trả về dữ liệu không hợp lệ.');
+        }
+        return data.response;
+    } catch (error) {
+        if (error.response) {
+            const status = error.response.status;
+            const errorMsg = error.response.data?.message || error.response.data?.error || 'API trả về lỗi';
+            
+            if (status === 429) {
+                throw new Error('Quá nhiều yêu cầu, vui lòng thử lại sau.');
+            } else if (status === 401) {
+                throw new Error('Không có quyền truy cập API.');
+            } else if (status >= 500) {
+                throw new Error('Lỗi server API, vui lòng thử lại sau.');
+            } else {
+                throw new Error(`API lỗi: ${errorMsg}`);
+            }
+        } else if (error.request) {
+            throw new Error('Không thể kết nối đến API. Kiểm tra kết nối mạng.');
+        } else if (error.code === 'ENOTFOUND') {
+            throw new Error('Không tìm thấy server API.');
+        } else if (error.code === 'ETIMEDOUT') {
+            throw new Error('Timeout khi gọi API.');
+        } else {
+            throw new Error(error.message || 'Lỗi không xác định khi gọi API.');
+        }
+    }
+});
 module.exports = {
     register,
     addRole,
