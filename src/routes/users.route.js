@@ -9,8 +9,8 @@ router.route('/logout').get(verifyAccessToken, usersController.logout);
 router.route('/forgot-password').post(usersController.forgotPassword);
 router.route('/reset-password').put(usersController.resetPassword);
 router.route('/register').post(usersController.register);
-router.route('/final-register/:token').get(usersController.finalRegister);
 router.route('/chatbot').post(usersController.chatbot);
+router.route('/final-register/:token').get(usersController.finalRegister);
 
 router.route('/add-role').post([verifyAccessToken, checkUserPermission],uploader.single('avatar'), usersController.addRole);
 router.route('/:uid')
