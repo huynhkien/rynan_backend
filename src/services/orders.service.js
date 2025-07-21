@@ -22,6 +22,34 @@ const addOrder = asyncHandler(async(data) => {
             if(existingProduct.currentStock < item.quantity){
                 throw new Error(`Sản phẩm ${item.name} chỉ còn ${existingProduct.currentStock} trong kho, không thể đặt ${item.quantity} sản phẩm`);
             }
+            const previousStock = existingProduct.currentStock;
+            const newQuantity = item.quantity || 0;
+            const newStock = previousStock - newQuantity; 
+            const newApproval = {
+                approvedBy: data.staff,
+                approvedAt: new Date(),
+                action: 'removed',
+                quantityChange: -newQuantity,
+                previousStock,
+                newStock,
+                notes: item.notes || `Tạo đơn hàng mới ${data.code}`
+            }
+            await Inventory.findOneAndUpdate(
+                { productId: item.pid },
+                {
+                    $inc: { currentStock: -newQuantity },
+                    $push: { approvalHistory: newApproval },
+                    $set: { 
+                        lastUpdated: new Date(), 
+                        approvedBy: data.staff 
+                    }
+                },
+                { new: true }
+            );
+            await Product.findByIdAndUpdate(
+                item.pid,
+                {$inc: {sold: item.quantity}}
+            )
         }
     }
     return await Order.create(data);
@@ -60,7 +88,7 @@ const updateOrder = asyncHandler(async(id, data) => {
                     quantityChange: -newQuantity,
                     previousStock,
                     newStock,
-                    notes: item.notes || `Tạo đơn hàng mới ${id}`
+                    notes: item.notes || `Cập nhật đơn hàng mới ${data.code}`
                 }
                 await Inventory.findOneAndUpdate(
                     { productId: item.pid },
@@ -78,6 +106,38 @@ const updateOrder = asyncHandler(async(id, data) => {
                     item.pid,
                     {$inc: {sold: item.quantity}}
                 )
+            }else{
+                const previousStock = existingProduct.currentStock;
+                const newQuantity = item.quantity || 0;
+                const newStock = previousStock + newQuantity; 
+                const newApproval = {
+                    approvedBy: data.staff,
+                    approvedAt: new Date(),
+                    action: 'created',
+                    quantityChange: newQuantity, // chú ý: hủy thì cộng lại => dương
+                    previousStock,
+                    newStock,
+                    notes: item.notes || `Hủy đơn hàng từ phiếu ${data.code}`
+                }
+
+                await Inventory.findOneAndUpdate(
+                    { productId: item.pid },
+                    {
+                        $inc: { currentStock: newQuantity },
+                        $push: { approvalHistory: newApproval },
+                        $set: { 
+                            lastUpdated: new Date(), 
+                            approvedBy: data.staff 
+                        }
+                    },
+                    { new: true }
+                );
+
+                // Trừ lại số lượng đã bán khi hủy
+                await Product.findByIdAndUpdate(
+                    item.pid,
+                    { $inc: { sold: -item.quantity } }
+                );
             }
         }
     }
