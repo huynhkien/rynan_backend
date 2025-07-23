@@ -224,6 +224,24 @@ const chatbot = asyncHandler(async(message) => {
         }
     }
 });
+//  tích hợp model chatbot ai
+const chatbotModel = asyncHandler(async(message) => {
+    const response = await axios.post(
+      config.chatbot_url.url,
+      {
+        model: 'openai/gpt-3.5-turbo',
+        messages: [{ role: 'user', content: message }]
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${config.chatbot_api.key}`,
+          'Content-Type': 'application/json',
+          'X-Title': 'My Node Chatbot'
+        }
+      }
+    );
+    return response
+})
 module.exports = {
     register,
     addRole,
@@ -241,5 +259,6 @@ module.exports = {
     deleteUser,
     checkMail,
     addFavorite,
-    chatbot
+    chatbot,
+    chatbotModel
 }
