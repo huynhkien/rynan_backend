@@ -229,7 +229,7 @@ const chatbotModel = asyncHandler(async(message) => {
     const response = await axios.post(
       config.chatbot_url.url,
       {
-        model: 'openai/gpt-3.5-turbo',
+        model: 'groq/mixtral-8x7b',
         messages: [{ role: 'user', content: message }]
       },
       {
