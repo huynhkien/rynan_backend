@@ -109,7 +109,7 @@ const updateOrderVnPay = asyncHandler(async(id) => {
                 quantityChange: -newQuantity,
                 previousStock,
                 newStock,
-                notes: item.notes || `Tạo đơn hàng mới ${order.code}`
+                notes: item.notes || `Tạo đơn hàng mới ${id}`
             }
             await Inventory.findOneAndUpdate(
                 { productId: item.pid },
