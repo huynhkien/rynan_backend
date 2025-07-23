@@ -26,6 +26,12 @@ const config = {
     vnp_Url_Return: {
         url: process.env.VNP_RETURN_URL
     },
+    chatbot_api: {
+        key: process.env.CHATBOT_API_KEY
+    },
+    chatbot_url: {
+        url: process.env.CHATBOT_URL
+    }
 
 }
 
