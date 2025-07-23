@@ -10,6 +10,7 @@ router.route('/forgot-password').post(usersController.forgotPassword);
 router.route('/reset-password').put(usersController.resetPassword);
 router.route('/register').post(usersController.register);
 router.route('/chatbot').post(usersController.chatbot);
+router.route('/chatbot-model-ai').post(usersController.chatbotModel);
 router.route('/final-register/:token').get(usersController.finalRegister);
 
 router.route('/add-role').post([verifyAccessToken, checkUserPermission],uploader.single('avatar'), usersController.addRole);
