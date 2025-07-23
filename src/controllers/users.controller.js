@@ -280,7 +280,7 @@ const addFavorite =asyncHandler(async(req, res) => {
             message: 'Cập nhật sản phẩm vào danh sách yêu thích thành công'
         });
 });
-// Chatbot
+// model chatbot tự train với csdl
 const chatbot = asyncHandler(async(req, res) => {
     const response = await UserService.chatbot(req.body.message);
     if(!response){
@@ -293,6 +293,21 @@ const chatbot = asyncHandler(async(req, res) => {
             success: true,
             data: response
         })
+})
+//  tích hợp model chatbot ai
+const chatbotModel = asyncHandler(async(req, res) => {
+    const response = await UserService.chatbotModel(req.body.message);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: "Lỗi chatbot"
+        })
+    }
+    return res.status(200).json({
+            success: true,
+            message: response.data.choices[0].message.content
+        });
+
 })
 module.exports = {
     register,
@@ -312,5 +327,6 @@ module.exports = {
     addRole,
     checkMail,
     addFavorite,
-    chatbot
+    chatbot,
+    chatbotModel
 }
