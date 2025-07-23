@@ -6,8 +6,10 @@ const router = express.Router();
 
 router.route('/')
             .post(OrderController.addOrder)
-            .get(OrderController.findAllOrder);
-
+            .get(OrderController.findAllOrder);  
+            
+router.route('/create-order-vnp').post(OrderController.createVnPayOrder);
+router.route('/return-order-vnp').get(OrderController.vnReturn);
 
 router.route('/:oid')
             .put([verifyAccessToken, checkUserPermission],OrderController.updateOrder)
@@ -17,5 +19,4 @@ router.route('/update-status-by-admin/:oid').put([verifyAccessToken, checkUserPe
 router.route('/update-status-by-user/:oid').put(verifyAccessToken, OrderController.updateStatusOrderByUser)
 router.route('/delete-product-order/:oid/:pid').delete([verifyAccessToken, checkUserPermission], OrderController.deleteProductOrder)
 router.route('/update-product-order/:oid/:pid').put([verifyAccessToken, checkUserPermission],OrderController.updateProductOrder)
-
 module.exports = router;
