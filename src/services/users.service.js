@@ -229,7 +229,7 @@ const chatbotModel = asyncHandler(async(message) => {
     const response = await axios.post(
       config.chatbot_url.url,
       {
-        model: 'groq/mixtral-8x7b',
+        model: 'deepseek/deepseek-r1-distill-llama-70b:free',
         messages: [{ role: 'user', content: message }]
       },
       {
