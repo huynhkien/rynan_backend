@@ -290,6 +290,57 @@ const findAllOrder = asyncHandler(async() => {
 });
 // Xóa đơn hàng
 const deleteOrder = asyncHandler(async(id) => {
+    const order = await Order.findById(id);
+    if(!order){
+        throw new Error('Không tìm thấy thông tin đơn hàng');
+    }
+    const products = order.products || [];
+    if(products.length > 0) {
+        for(let i = 0; i < products.length; i++){
+            const item = products[i];
+            const existingProduct = await Inventory.findOne({ productId: item.pid });
+            // Kiểm tra nếu sản phẩm không tồn tại trong kho
+            if(!existingProduct){
+                throw new Error(`Sản phẩm ${item.name} không tồn tại trong kho`);
+            }
+            // Kiểm tra số lượng tồn kho phải lớn hơn 50 
+            if(existingProduct.currentStock <= 100){
+                throw new Error(`Sản phẩm ${item.name} có số lượng tồn kho (${existingProduct.currentStock}) không đủ. Cần tối thiểu 101 sản phẩm để tạo đơn hàng`);
+            }
+            // Kiểm tra số lượng đặt hàng không được vượt quá tồn kho
+            if(existingProduct.currentStock < item.quantity){
+                throw new Error(`Sản phẩm ${item.name} chỉ còn ${existingProduct.currentStock} trong kho, không thể đặt ${item.quantity} sản phẩm`);
+            }
+            const previousStock = existingProduct.currentStock;
+            const newQuantity = item.quantity || 0;
+            const newStock = previousStock + newQuantity; 
+            const newApproval = {
+                approvedBy: order.orderBy,
+                approvedAt: new Date(),
+                action: 'updated',
+                quantityChange: newQuantity,
+                previousStock,
+                newStock,
+                notes: item.notes || `Xóa thông tin đơn hàng ${id}`
+            }
+            await Inventory.findOneAndUpdate(
+                { productId: item.pid },
+                {
+                    $inc: { currentStock: newQuantity },
+                    $push: { approvalHistory: newApproval },
+                    $set: { 
+                        lastUpdated: new Date(), 
+                        approvedBy: order.orderBy
+                    }
+                },
+                { new: true }
+            );
+            await Product.findByIdAndUpdate(
+                item.pid,
+                {$inc: {sold: -item.quantity}}
+            )
+        }
+    }
     return await Order.findByIdAndDelete({_id: id});
 });
 // Xóa sản phẩm trong đơn hàng
@@ -324,7 +375,52 @@ const updateProductOrder = asyncHandler(async (oid, pid, data) => {
 
     return await order.save();
 });
+// Xóa nhiều đơn hàng
+const deleteOrders = asyncHandler(async(ordersId) => {
+    if(!ordersId || ordersId.length === 0) throw new Error('Không tìm thấy thông tin về Id');
+    for (const orderId of ordersId) {
+        const order = await Order.findById(orderId);
+        if (!order) throw new Error(`Không tìm thấy đơn hàng với ID: ${orderId}`);
+        const products = order.products || [];
+        for (const item of products) {
+            const existingProduct = await Inventory.findOne({ productId: item.pid });
+            if (!existingProduct) {
+                throw new Error(`Sản phẩm "${item.name}" không tồn tại trong kho`);
+            }
 
+            const previousStock = existingProduct.currentStock;
+            const quantity = item.quantity || 0;
+            const newStock = previousStock + quantity;
+
+            const newApproval = {
+                approvedBy: order.orderBy,
+                approvedAt: new Date(),
+                action: 'updated',
+                quantityChange: quantity,
+                previousStock,
+                newStock,
+                notes: item.notes || `Khôi phục tồn kho do xóa đơn hàng ${orderId}`,
+            };
+
+            await Inventory.findOneAndUpdate(
+                { productId: item.pid },
+                {
+                $inc: { currentStock: quantity },
+                $push: { approvalHistory: newApproval },
+                $set: {
+                    lastUpdated: new Date(),
+                    approvedBy: order.orderBy,
+                },
+                }
+            );
+
+            await Product.findByIdAndUpdate(item.pid, {
+                $inc: { sold: -quantity },
+            });
+        }
+    }
+    return await Order.deleteMany({_id: { $in: ordersId }})
+})
 module.exports = {
     addOrder,
     updateOrder,
@@ -336,5 +432,6 @@ module.exports = {
     deleteProductOrder,
     updateProductOrder,
     addOrderVnPay,
-    updateOrderVnPay
+    updateOrderVnPay,
+    deleteOrders
 }
