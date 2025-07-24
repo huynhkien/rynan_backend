@@ -101,12 +101,28 @@ const deleteCategory = asyncHandler(async(req, res) => {
         message: 'Xóa danh mục thành công'
     });
 });
+// Xóa nhiều danh mục
+const deleteCategories = asyncHandler(async(req, res) => {
+    const { categoriesId } = req.body;
+    const response = await CategoryService.deleteCategories(categoriesId);
+    if(!response) {
+        return res.status(400).json({
+            success: false,
+            message: 'Xóa danh mục thất bại'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Xóa danh mục thành công'
+    });
+})
 module.exports = {
     addCategory,
     updateCategory,
     findCategoryById,
     findCategoryBySlug,
     findAllCategory,
-    deleteCategory
+    deleteCategory,
+    deleteCategories
 }
 
