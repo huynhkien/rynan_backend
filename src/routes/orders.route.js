@@ -10,6 +10,7 @@ router.route('/')
             
 router.route('/create-order-vnp').post(OrderController.createVnPayOrder);
 router.route('/return-order-vnp').get(OrderController.vnReturn);
+router.route('/delete-orders').get(OrderController.deleteOrders);
 
 router.route('/:oid')
             .put([verifyAccessToken, checkUserPermission],OrderController.updateOrder)
