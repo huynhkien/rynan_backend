@@ -308,6 +308,20 @@ const chatbotModel = asyncHandler(async(req, res) => {
             message: response.data.choices[0].message.content
         });
 
+});
+const deleteUsers = asyncHandler(async(req, res) => {
+    const { usersId } = req.body;
+    const response = await UserService.deleteUsers(usersId);
+    if(!response) {
+        return res.status(400).json({
+            success: false,
+            message: 'Xóa thông tin thất bại'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Xóa thông tin thành công'
+    });
 })
 module.exports = {
     register,
@@ -328,5 +342,6 @@ module.exports = {
     checkMail,
     addFavorite,
     chatbot,
-    chatbotModel
+    chatbotModel,
+    deleteUsers
 }

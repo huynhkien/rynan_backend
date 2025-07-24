@@ -75,11 +75,27 @@ const deleteSpecification = asyncHandler(async(req, res) => {
         message: 'Xóa quy cách đóng gói thành công'
     });
 });
+// Xóa nhiều quy cách
+const deleteSpecifications = asyncHandler(async(req, res) => {
+    const { specificationsId } = req.body;
+    const response = await SpecificationService.deleteSpecifications(specificationsId);
+    if(!response) {
+        return res.status(400).json({
+            success: false,
+            message: 'Xóa quy cách thất bại'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Xóa quy cách thành công'
+    });
+})
 module.exports = {
     addSpecification,
     updateSpecification,
     findSpecificationById,
     findAllSpecification,
-    deleteSpecification
+    deleteSpecification,
+    deleteSpecifications
 }
 

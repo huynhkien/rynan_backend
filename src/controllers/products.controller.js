@@ -290,6 +290,21 @@ const deleteReply = asyncHandler(async(req, res) => {
         message: 'Xóa phản hồi thành công'
     });
 })
+// Xóa nhiều sản phẩm
+const deleteProducts = asyncHandler(async(req, res) => {
+    const { productsId } = req.body;
+    const response = await ProductService.deleteProducts(productsId);
+    if(!response) {
+        return res.status(400).json({
+            success: false,
+            message: 'Xóa sản phẩm thất bại'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Xóa sản phẩm thành công'
+    });
+})
 module.exports = {
     addProduct,
     updateProduct,
@@ -306,5 +321,6 @@ module.exports = {
     deleteRating,
     addReply,
     addReplyChild,
-    deleteReply
+    deleteReply,
+    deleteProducts
 }
