@@ -25,6 +25,11 @@ const deleteCategory = asyncHandler(async (id) => {
 const findCategoryBySlug = asyncHandler(async(slug) => {
     return await Category.findOne(slug)
 })
+// Xóa theo nhiều id
+const deleteCategories = asyncHandler(async(categoriesId) => {
+    if(!categoriesId) throw new Error('Không tìm thấy thông tin về Id');
+    return await Category.deleteMany({_id: { $in: categoriesId }})
+})
 module.exports = {
     addCategory,
     updateCategory,
@@ -32,4 +37,5 @@ module.exports = {
     findCategoryById,
     findAllCategory,
     deleteCategory,
+    deleteCategories
 }
