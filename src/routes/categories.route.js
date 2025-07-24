@@ -8,6 +8,8 @@ const uploader = require('../config/connectCloudinary');
 router.route('/')
             .post([verifyAccessToken, checkUserPermission],uploader.single('thumb'), categoriesController.addCategory)
             .get(categoriesController.findAllCategory);
+router.route('/delete-categories').delete(categoriesController.deleteCategories);
+
 router.route('/:cid')
             .get([verifyAccessToken, checkUserPermission], categoriesController.findCategoryById)
             .put([verifyAccessToken, checkUserPermission],uploader.single('thumb'), categoriesController.updateCategory)
