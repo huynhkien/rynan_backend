@@ -256,6 +256,21 @@ const deleteProductOrder = asyncHandler(async(req, res) => {
         message: 'Xóa sản phẩm trong đơn hàng thành công'
     })
 })
+// Xóa thông tin nhiều đơn hàng
+const deleteOrders = asyncHandler(async(req, res) => {
+    const {ordersId} = req.body;
+    const response = await OrderService.deleteOrder(ordersId);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Xóa thông tin đơn hàng thất bại'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Xóa thông tin đơn hàng thành công'
+    })
+})
 module.exports = {
     addOrder,
     updateOrder,
@@ -267,5 +282,6 @@ module.exports = {
     deleteProductOrder,
     updateProductOrder,
     createVnPayOrder,
-    vnReturn
+    vnReturn,
+    deleteOrders
 }
