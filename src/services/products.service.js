@@ -215,6 +215,11 @@ const deleteReply = asyncHandler(async (pid, rid, repId) => {
     }
     return response;
 });
+// Xóa nhiều sản phẩm
+const deleteProducts = asyncHandler(async(productsId) => {
+    if(!productsId) throw new Error('Không tìm thấy thông tin về Id');
+    return await Product.deleteMany({_id: { $in: productsId }})
+})
 module.exports = {
     addProduct,
     updateProduct,
@@ -232,5 +237,6 @@ module.exports = {
     deleteRating,
     addReply, 
     addReplyChild,
-    deleteReply
+    deleteReply,
+    deleteProducts
 }

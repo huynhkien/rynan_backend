@@ -18,13 +18,18 @@ const findAllSpecification = asyncHandler(async() => {
 })
 // Xóa quy cách đóng gói
 const deleteSpecification = asyncHandler(async (id) => {
-    console.log(id)
     return await Specification.findByIdAndDelete(id);
 });
+// Xóa nhiều quy cách 
+const deleteSpecifications = asyncHandler(async(specificationsId) => {
+    if(!specificationsId) throw new Error('Không tìm thấy thông tin về Id');
+    return await Specification.deleteMany({_id: { $in: specificationsId }})
+})
 module.exports = {
     addSpecification,
     updateSpecification,
     findSpecificationById,
     findAllSpecification,
     deleteSpecification,
+    deleteSpecifications
 }

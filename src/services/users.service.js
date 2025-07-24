@@ -241,6 +241,11 @@ const chatbotModel = asyncHandler(async(message) => {
       }
     );
     return response
+});
+// Xóa nhiều người dùng
+const deleteUsers = asyncHandler(async(usersId) => {
+    if(!usersId) throw new Error('Không tìm thấy thông tin về Id');
+    return await User.deleteMany({_id: { $in: usersId }})
 })
 module.exports = {
     register,
@@ -260,5 +265,6 @@ module.exports = {
     checkMail,
     addFavorite,
     chatbot,
-    chatbotModel
+    chatbotModel,
+    deleteUsers
 }
