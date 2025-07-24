@@ -7,6 +7,9 @@ const router = express.Router();
 router.route('/')
             .post([verifyAccessToken, checkUserPermission],specificationsController.addSpecification)
             .get([verifyAccessToken, checkUserPermission],specificationsController.findAllSpecification);
+
+router.route('/delete-specifications').delete(specificationsController.deleteSpecifications);
+
 router.route('/:sid')
             .get([verifyAccessToken, checkUserPermission],specificationsController.findSpecificationById)
             .put([verifyAccessToken, checkUserPermission],specificationsController.updateSpecification)

@@ -10,6 +10,7 @@ router.route('/')
             .get(productsController.findAllProduct);
 
 router.route('/add-rating/').put(productsController.addRating);
+router.route('/delete-products').delete(productsController.deleteProducts);
 router.route('/:pid')
             .get(productsController.findProductById)
             .put([verifyAccessToken, checkUserPermission],uploader.single('thumb'), productsController.updateProduct)
