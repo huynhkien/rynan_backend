@@ -65,6 +65,7 @@ const login = asyncHandler(async({email, password, res}) => {
 })
 // Đăng xuất tài khoản
 const logout = asyncHandler(async(res, cookie) => {
+    if(!cookie.refreshToken) throw new Error("Không tồn tại refreshToken");
     const response = await User.findOneAndUpdate({refreshToken: cookie.refreshToken}, {refreshToken: ''}, {new: true});
     if(response){
         res.clearCookie('accessToken', {httpOnly: true, secure: true});
