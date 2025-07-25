@@ -74,6 +74,21 @@ const deleteQuote = asyncHandler(async(req, res) => {
         message: 'Xóa báo giá thành công'
     });
 });
+// Xóa nhiều báo giá
+const deleteQuotes = asyncHandler(async(req, res) => {
+    const {quotesId} = req.body;
+    const response = await QuoteService.deleteQuotes(quotesId);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Xóa báo giá thất bại'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Xóa báo giá thành công'
+    });
+});
 // Xóa sản phẩm trong báo giá
 const deleteProductQuote = asyncHandler(async(req, res) => {
     const {qid, pid} = req.params;
@@ -95,6 +110,7 @@ module.exports = {
     findQuoteById,
     findAllQuote,
     deleteQuote,
-    deleteProductQuote
+    deleteProductQuote,
+    deleteQuotes
 }
 

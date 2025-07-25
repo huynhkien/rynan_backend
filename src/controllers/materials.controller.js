@@ -74,11 +74,27 @@ const deleteMaterial = asyncHandler(async(req, res) => {
         message: 'Xóa nguyên liệu thành công'
     });
 });
+// Xóa nhiều thông tin
+const deleteMaterials = asyncHandler(async(req, res) => {
+    const { materialsId } = req.body;
+    const response = await MaterialService.deleteMaterials(materialsId);
+    if(!response) {
+        return res.status(400).json({
+            success: false,
+            message: 'Xóa thông tin thất bại'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Xóa thông tin thành công'
+    });
+})
 module.exports = {
     addMaterial,
     updateMaterial,
     findMaterialById,
     findAllMaterial,
-    deleteMaterial
+    deleteMaterial,
+    deleteMaterials
 }
 

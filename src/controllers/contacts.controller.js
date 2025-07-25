@@ -62,7 +62,21 @@ const findAllContact = asyncHandler(async(req, res) => {
 const deleteContact = asyncHandler(async(req, res) => {
     const {cid} = req.params;
     const response = await ContactService.deleteContact(cid);
-    console.log(response)
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Xóa liên hệ thất bại'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Xóa liên hệ thành công'
+    });
+});
+// Xóa nhiều liên hệ
+const deleteContacts = asyncHandler(async(req, res) => {
+    const {contactsId} = req.body;
+    const response = await ContactService.deleteContacts(contactsId);
     if(!response){
         return res.status(400).json({
             success: false,
@@ -79,6 +93,7 @@ module.exports = {
     sendMailContact,
     findContactById,
     findAllContact,
-    deleteContact
+    deleteContact,
+    deleteContacts
 }
 

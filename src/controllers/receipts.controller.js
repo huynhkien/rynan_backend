@@ -153,6 +153,21 @@ const deleteReceipt = asyncHandler(async(req, res) => {
         message: 'Xóa phiếu thành công'
     })
 })
+// Xóa phiếu
+const deleteReceipts = asyncHandler(async(req, res) => {
+    const {receiptsId} = req.body;
+    const response = await ReceiptService.deleteReceipts(receiptsId);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: 'Xóa phiếu thất bại'
+        });
+    }
+    return res.status(200).json({
+        success: true,
+        message: 'Xóa phiếu thành công'
+    })
+})
 module.exports = {
     addImportReceipt,
     addExportReceipt,
@@ -163,5 +178,6 @@ module.exports = {
     deleteProductReceipt,
     deleteReceipt,
     updateMaterialReceipt,
-    deleteMaterialReceipt
+    deleteMaterialReceipt,
+    deleteReceipts
 }

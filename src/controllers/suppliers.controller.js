@@ -62,7 +62,6 @@ const findAllSupplier = asyncHandler(async(req, res) => {
 const deleteSupplier = asyncHandler(async(req, res) => {
     const {sid} = req.params;
     const response = await SupplierService.deleteSupplier(sid);
-    console.log(response)
     if(!response){
         return res.status(400).json({
             success: false,
@@ -74,11 +73,27 @@ const deleteSupplier = asyncHandler(async(req, res) => {
         message: 'Xóa nhà cung cấp thành công'
     });
 });
+// Xóa nhiều thông tin
+const deleteSuppliers = asyncHandler(async(req, res) => {
+    const {suppliersId} = req.body;
+    const response = await SupplierService.deleteSuppliers(suppliersId);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            message: "Xóa thông tin thất bại"
+        })
+    }
+    return res.status(200).json({
+        success: true,
+        message: "Xóa thông tin thành công"
+    })
+})
 module.exports = {
     addSupplier,
     updateSupplier,
     findSupplierById,
     findAllSupplier,
-    deleteSupplier
+    deleteSupplier,
+    deleteSuppliers
 }
 

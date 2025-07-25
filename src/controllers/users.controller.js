@@ -309,6 +309,7 @@ const chatbotModel = asyncHandler(async(req, res) => {
         });
 
 });
+// Xóa nhiều thông tin
 const deleteUsers = asyncHandler(async(req, res) => {
     const { usersId } = req.body;
     const response = await UserService.deleteUsers(usersId);
@@ -323,6 +324,19 @@ const deleteUsers = asyncHandler(async(req, res) => {
         message: 'Xóa thông tin thành công'
     });
 })
+// Gọi api từ rynan_ai
+const getApiRynan = asyncHandler(async (req, res) => {
+  const response = await UserService.getApiRynan();
+  if (!response) {
+    return res.json({
+      message: "API Rynan không phản hồi",
+    });
+  }
+
+  return res.json({
+    message: "API Rynan đang hoạt động",
+  });
+});
 module.exports = {
     register,
     finalRegister,
@@ -343,5 +357,6 @@ module.exports = {
     addFavorite,
     chatbot,
     chatbotModel,
-    deleteUsers
+    deleteUsers,
+    getApiRynan
 }
