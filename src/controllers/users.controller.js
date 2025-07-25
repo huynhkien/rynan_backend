@@ -312,6 +312,7 @@ const chatbotModel = asyncHandler(async(req, res) => {
 // Xóa nhiều thông tin
 const deleteUsers = asyncHandler(async(req, res) => {
     const { usersId } = req.body;
+    console.log(usersId)
     const response = await UserService.deleteUsers(usersId);
     if(!response) {
         return res.status(400).json({
