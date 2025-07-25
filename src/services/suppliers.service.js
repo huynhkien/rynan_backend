@@ -22,7 +22,7 @@ const deleteSupplier = asyncHandler(async (id) => {
 });
 // Xóa nhiều thông tin 
 const deleteSuppliers = asyncHandler(async(suppliersId) => {
-    if(sSuppliersId) throw new Error('Không tìm thấy thông tin về Id');
+    if(!suppliersId) throw new Error('Không tìm thấy thông tin về Id');
     return await Supplier.deleteMany({_id: { $in: suppliersId }})
 })
 module.exports = {
