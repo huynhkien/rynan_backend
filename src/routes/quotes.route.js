@@ -7,6 +7,7 @@ const router = express.Router();
 router.route('/')
             .post([verifyAccessToken, checkUserPermission],quotesController.addQuote)
             .get([verifyAccessToken, checkUserPermission],quotesController.findAllQuote);
+router.route('/delete-quotes').delete([verifyAccessToken, checkUserPermission],quotesController.deleteQuotes)
 router.route('/:qid')
             .get([verifyAccessToken, checkUserPermission],quotesController.findQuoteById)
             .put([verifyAccessToken, checkUserPermission],quotesController.updateQuote)

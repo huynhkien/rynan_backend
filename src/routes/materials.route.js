@@ -7,6 +7,7 @@ const router = express.Router();
 router.route('/')
             .post([verifyAccessToken, checkUserPermission], materialsController.addMaterial)
             .get([verifyAccessToken, checkUserPermission], materialsController.findAllMaterial);
+router.route('/delete-materials').delete([verifyAccessToken, checkUserPermission], materialsController.deleteMaterials);       
 router.route('/:mid')
             .get([verifyAccessToken, checkUserPermission], materialsController.findMaterialById)
             .put([verifyAccessToken, checkUserPermission], materialsController.updateMaterial)

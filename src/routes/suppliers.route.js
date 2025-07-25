@@ -7,6 +7,7 @@ const {verifyAccessToken, checkUserPermission} = require('../middlewares/auth');
 router.route('/')
             .post([verifyAccessToken, checkUserPermission],suppliersController.addSupplier)
             .get([verifyAccessToken, checkUserPermission],suppliersController.findAllSupplier);
+router.route('/delete-suppliers').delete([verifyAccessToken, checkUserPermission],suppliersController.deleteSuppliers)
 router.route('/:sid')
             .get([verifyAccessToken, checkUserPermission],suppliersController.findSupplierById)
             .put([verifyAccessToken, checkUserPermission],suppliersController.updateSupplier)

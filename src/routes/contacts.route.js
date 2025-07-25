@@ -7,6 +7,7 @@ const router = express.Router();
 router.route('/')
             .post(contactsController.addContact)
             .get(contactsController.findAllContact);
+router.route('/delete-contacts').delete(contactsController.deleteContacts)
 router.route('/:cid')
             .get([verifyAccessToken, checkUserPermission], contactsController.findContactById)
             .delete([verifyAccessToken, checkUserPermission], contactsController.deleteContact);

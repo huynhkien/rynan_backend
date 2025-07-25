@@ -7,6 +7,7 @@ const {verifyAccessToken, checkUserPermission} = require('../middlewares/auth');
 router.route('/').get([verifyAccessToken, checkUserPermission],receiptController.findAllReceipt);
 router.route('/create-import-receipt').post([verifyAccessToken, checkUserPermission],receiptController.addImportReceipt);
 router.route('/create-export-receipt').post([verifyAccessToken, checkUserPermission],receiptController.addExportReceipt);
+router.route('/delete-receipts').delete([verifyAccessToken, checkUserPermission],receiptController.deleteReceipts);
 
 router.route('/:rid')
             .get([verifyAccessToken, checkUserPermission],receiptController.findReceiptById)
