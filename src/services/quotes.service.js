@@ -31,11 +31,17 @@ const deleteProductQuote = asyncHandler(async (qid, pid) => {
 const deleteQuote = asyncHandler(async (id) => {
     return await Quote.findByIdAndDelete(id);
 });
+// Xóa nhiều phiếu báo giá
+const deleteQuotes = asyncHandler(async(quotesId) => {
+    if(!quotesId) throw new Error('Không tìm thấy thông tin về Id');
+    return await Quote.deleteMany({_id: { $in: quotesId }})
+})
 module.exports = {
     addQuote,
     updateQuote,
     findQuoteById,
     findAllQuote,
     deleteQuote,
-    deleteProductQuote
+    deleteProductQuote,
+    deleteQuotes
 }

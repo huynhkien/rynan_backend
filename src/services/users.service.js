@@ -242,6 +242,12 @@ const chatbotModel = asyncHandler(async(message) => {
     );
     return response
 });
+// Gọi apu từ rynan_ai
+const getApiRynan = asyncHandler(async() => {
+    const response = await axios.get(`${process.env.RYNAN_AI_URL}/`);
+    if(!response) throw new Error("Api không phản hồi");
+    return response;
+})
 // Xóa nhiều người dùng
 const deleteUsers = asyncHandler(async(usersId) => {
     if(!usersId) throw new Error('Không tìm thấy thông tin về Id');
@@ -266,5 +272,6 @@ module.exports = {
     addFavorite,
     chatbot,
     chatbotModel,
-    deleteUsers
+    deleteUsers,
+    getApiRynan
 }

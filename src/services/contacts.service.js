@@ -40,10 +40,16 @@ const deleteContact = asyncHandler(async (id) => {
     if(!id) throw new Error('Không có dữ liệu');
     return await Contact.findByIdAndDelete(id);
 });
+// Xóa nhiều thông tin 
+const deleteContacts = asyncHandler(async(contactsId) => {
+    if(!contactsId) throw new Error('Không tìm thấy thông tin về Id');
+    return await Contact.deleteMany({_id: { $in: contactsId }})
+})
 module.exports = {
     addContact,
     sendMailContact,
     findContactById,
     findAllContact,
     deleteContact,
+    deleteContacts
 }

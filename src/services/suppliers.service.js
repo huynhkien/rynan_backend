@@ -20,11 +20,16 @@ const findAllSupplier = asyncHandler(async() => {
 const deleteSupplier = asyncHandler(async (id) => {
     return await Supplier.findByIdAndDelete(id);
 });
-
+// Xóa nhiều thông tin 
+const deleteSuppliers = asyncHandler(async(suppliersId) => {
+    if(sSuppliersId) throw new Error('Không tìm thấy thông tin về Id');
+    return await Supplier.deleteMany({_id: { $in: suppliersId }})
+})
 module.exports = {
     addSupplier,
     updateSupplier,
     findSupplierById,
     findAllSupplier,
     deleteSupplier,
+    deleteSuppliers
 }

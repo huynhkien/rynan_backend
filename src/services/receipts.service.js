@@ -307,6 +307,11 @@ const deleteMaterialReceipt = asyncHandler(async(rid, mid) => {
         {$pull: {materials: {mid: mid}}},
         {new: true}
     )
+});
+// Xóa nhiều thông tin 
+const deleteReceipts = asyncHandler(async(receiptsId) => {
+    if(!receiptsId) throw new Error('Không tìm thấy thông tin về Id');
+    return await Receipt.deleteMany({_id: { $in: receiptsId }})
 })
 module.exports = {
     addReceipt,
@@ -319,5 +324,6 @@ module.exports = {
     deleteProductReceipt,
     deleteMaterialReceipt,
     updateStatusReceipt,
-    removeReceipt
+    removeReceipt,
+    deleteReceipts
 }
