@@ -6,6 +6,7 @@ const sendMail = require('../utils/sendMail');
 const axios = require('axios');
 const config = require('../config/config');
 const { generateAccessToken, generateRefreshToken } = require('../middlewares/auth');
+const jwt = require('jsonwebtoken');
 
 
 // Xác thực tài khoản 
@@ -64,7 +65,7 @@ const login = asyncHandler(async({email, password, res}) => {
     }
 })
 // new rehreshToken
-const refreshAccessToken = asyncHandler(async(cookie) => {
+const refreshAccessToken = asyncHandler(async(cookie, res) => {
     if(!cookie || !cookie.refreshToken) throw new Error('Không tìm thấy refreshToken');
     const decode = jwt.verify(cookie.refreshToken, process.env.JWT_SECRET);
     const user = await User.findOne({
@@ -74,11 +75,7 @@ const refreshAccessToken = asyncHandler(async(cookie) => {
     if(!user) throw new Error('Không tìm thấy thông tin người dùng');
     // tao accessToken moi
     const accessToken = generateAccessToken(user?._id, user?.role);
-    res.cookie('accessToken', accessToken, {
-            httpOnly: true, 
-            secure: true,
-            sameSite: 'none', 
-            maxAge: 30 * 60 * 1000 });
+    res.cookie('accessToken', accessToken, {httpOnly: true, secure: true,sameSite: 'none', maxAge: 1 * 24 * 60 *60 * 1000 });
     return accessToken        
 })
 // Đăng xuất tài khoản
