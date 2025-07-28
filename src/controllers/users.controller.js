@@ -32,7 +32,7 @@ const finalRegister = asyncHandler(async(req, res) => {
 // new rehreshToken
 const refreshAccessToken = asyncHandler(async(req, res) => {
     const cookie = req.cookies;
-    const response = await UserService.refreshAccessToken(cookie);
+    const response = await UserService.refreshAccessToken(cookie, res);
     if(!response){
         return res.status(400).json({
             success: false,
