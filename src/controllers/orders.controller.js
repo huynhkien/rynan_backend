@@ -31,6 +31,9 @@ const addOrder = asyncHandler(async(req, res) => {
 });
 // Tạo thanh toán với vnpay
 const createVnPayOrder = asyncHandler(async(req, res) => {
+    if (req.timedout || req.headers['x-timeout'] || req.headers['x-gateway-error']) {
+        return res.redirect(`${process.env.URL_CLIENT}`);
+    }
     if(!req.body){
         throw new Error('Thông tin đơn hàng không hợp lệ')
     }
@@ -41,11 +44,11 @@ const createVnPayOrder = asyncHandler(async(req, res) => {
             message: 'Tạo đơn hàng không thành công'
         });
     }
-    process.env.TZ = 'Asia/Ho_Chi_Minh';
+    process.env.TZ = 'Asia/Tra_Vinh';
     
     let date = new Date();
     let createDate = moment(date).format('YYYYMMDDHHmmss');
-    let ipAddr = req.ip || req.connection.remoteAddress || '127.0.0.1';
+    let ipAddr = req.headers['x-forwarded-for']?.split(',').shift() || req.connection.remoteAddress || '127.0.0.1';
     
     let tmnCode = config.vnp_TmnCode.code;
     let secretKey = config.vnp_HashSecret.secret;
