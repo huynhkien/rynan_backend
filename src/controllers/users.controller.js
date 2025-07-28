@@ -28,6 +28,21 @@ const finalRegister = asyncHandler(async(req, res) => {
         return res.redirect(`${process.env.URL_CLIENT}/final-register/failed`);
     }
     return res.redirect(`${process.env.URL_CLIENT}/final-register/succeeded`);
+});
+// new rehreshToken
+const refreshAccessToken = asyncHandler(async(req, res) => {
+    const cookie = req.cookies;
+    const response = await UserService.refreshAccessToken(cookie);
+    if(!response){
+        return res.status(400).json({
+            success: false,
+            data: "Loi"
+        })
+    }
+    return res.status(200).json({
+            success: tru,
+            data: response
+        })
 })
 // Tìm kiếm thông tin theo id
 const findUserById = asyncHandler(async(req, res) => {
@@ -359,5 +374,6 @@ module.exports = {
     chatbot,
     chatbotModel,
     deleteUsers,
-    getApiRynan
+    getApiRynan,
+    refreshAccessToken
 }
