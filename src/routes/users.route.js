@@ -11,6 +11,7 @@ router.route('/reset-password').put(usersController.resetPassword);
 router.route('/register').post(usersController.register);
 router.route('/chatbot').post(usersController.chatbot);
 router.route('/api-chatbot').get(usersController.getApiRynan);
+router.route('/refresh-token').post(usersController.refreshAccessToken);
 router.route('/chatbot-model-ai').post(usersController.chatbotModel);
 router.route('/delete-users').delete(usersController.deleteUsers);
 router.route('/final-register/:token').get(usersController.finalRegister);
