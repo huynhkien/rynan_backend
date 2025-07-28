@@ -49,7 +49,7 @@ const login = asyncHandler(async({email, password, res}) => {
     const accessToken = generateAccessToken(user?._id, user?.role);
     const newRefreshToken = generateRefreshToken(user?._id);
     res.cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true,sameSite: 'none', maxAge: 1 * 24 * 60 *60 * 1000});
-    res.cookie('accessToken', accessToken, {httpOnly: true, secure: true,sameSite: 'none', maxAge: 30 * 60 * 1000 });
+    res.cookie('accessToken', accessToken, {httpOnly: true, secure: true,sameSite: 'none', maxAge: 1 * 24 * 60 *60 * 1000 });
     await User.findByIdAndUpdate(
         user?._id,
         {refreshToken: newRefreshToken},
