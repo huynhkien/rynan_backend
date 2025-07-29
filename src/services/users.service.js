@@ -46,11 +46,11 @@ const login = asyncHandler(async({email, password, res}) => {
     const user = await User.findOne({email});
     if(!user) throw new Error('Không tìm thấy thông tin người dùng.')
     if(!await user.isCorrectPassword(password)) throw new Error('Thông tin mật khẩu không chính xác.');
-        // tạo accessToken và refreshToken
+    // tạo accessToken và refreshToken
     const accessToken = generateAccessToken(user?._id, user?.role);
     const newRefreshToken = generateRefreshToken(user?._id);
     res.cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true,sameSite: 'none', maxAge: 1 * 24 * 60 *60 * 1000});
-    res.cookie('accessToken', accessToken, {httpOnly: true, secure: true,sameSite: 'none', maxAge: 1 * 24 * 60 *60 * 1000 });
+    res.cookie('accessToken', accessToken, {httpOnly: true, secure: true,sameSite: 'none', maxAge: 10 * 60 * 1000 });
     await User.findByIdAndUpdate(
         user?._id,
         {refreshToken: newRefreshToken},
@@ -75,7 +75,7 @@ const refreshAccessToken = asyncHandler(async(cookie, res) => {
     if(!user) throw new Error('Không tìm thấy thông tin người dùng');
     // tao accessToken moi
     const accessToken = generateAccessToken(user?._id, user?.role);
-    res.cookie('accessToken', accessToken, {httpOnly: true, secure: true,sameSite: 'none', maxAge: 1 * 24 * 60 *60 * 1000 });
+    res.cookie('accessToken', accessToken, {httpOnly: true, secure: true,sameSite: 'none', maxAge: 10 * 60 * 1000 });
     return accessToken        
 })
 // Đăng xuất tài khoản
