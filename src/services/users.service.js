@@ -70,7 +70,6 @@ const refreshAccessToken = asyncHandler(async(cookie, res) => {
     const decode = jwt.verify(cookie.refreshToken, process.env.JWT_SECRET);
     const user = await User.findOne({
         _id: decode._id,
-        refreshToken: cookie.refreshToken
     });
     if(!user) throw new Error('Không tìm thấy thông tin người dùng');
     // tao accessToken moi
