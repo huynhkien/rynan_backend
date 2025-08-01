@@ -23,6 +23,9 @@ const config = {
     vnp_Url: {
         url: process.env.VNP_URL
     },
+    vnp_Api: {
+        url: process.env.VNP_API
+    },
     vnp_Url_Return: {
         url: process.env.VNP_RETURN_URL
     },
