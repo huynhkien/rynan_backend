@@ -5,10 +5,11 @@ const express = require('express');
 const router = express.Router();
 
 router.route('/')
-            .post(OrderController.addOrder)
-            .get(OrderController.findAllOrder);  
+            .post(verifyAccessToken, OrderController.addOrder)
+            .get(verifyAccessToken, OrderController.findAllOrder);  
             
 router.route('/create-order-vnp').post(OrderController.createVnPayOrder);
+router.route('/refund-vnp').post(OrderController.vnpRefund);
 router.route('/return-order-vnp').get(OrderController.vnReturn);
 router.route('/delete-orders').get(OrderController.deleteOrders);
 
