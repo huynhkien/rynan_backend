@@ -244,7 +244,7 @@ const chatbotModel = asyncHandler(async(message) => {
     const response = await axios.post(
       config.chatbot_url.url,
       {
-        model: 'deepseek/deepseek-r1-distill-llama-70b:free',
+        model: 'openchat/openchat-3.5-1210',
         messages: [{ role: 'user', content: message }]
       },
       {
