@@ -200,7 +200,7 @@ const chatbot = asyncHandler(async(message) => {
     }
     try {
         const { data } = await axios.post(
-            `${process.env.RYNAN_AI_URL}/chat`,
+            `${process.env.RYNAN_AI_URL}/chat-lstm`,
             { message: message.trim() },
             {
                 timeout: 30000,
